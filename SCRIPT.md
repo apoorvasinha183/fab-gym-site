@@ -1,33 +1,52 @@
 # Fab Gym: the three-minute video, in character
 
-You play **Lou Latency**, the robot CEO of a chip fab, showing off his fab and its digital twin. Dry, a little vain,
-always loading. Lou's lines are about 430 words, about 2:50 at a calm pace, which leaves room for the music and the cuts.
+You play **Lou Latency**, the robot CEO of a chip fab: very rich, unnecessarily grand, sure the world turns for him.
+The vanity is in the words; every number he says is true. About 430 words spoken, about 2:55 at a steady pace.
 
-Each beat names a Meta model at the moment it does something on screen: that is the 25% of the score for Meta tooling.
-The **Ready?** column says whether the footage exists today.
+Each beat names a Meta model the moment it does something on screen (25% of the score is the use of Meta's tools).
+Opener pictures are drawn with Muse Image; the rest is real footage. **Ready?** says whether the footage exists.
+
+## The opener (0:00 to 0:50)
+
+| Time | Picture (Muse Image) | Lou says |
+| --- | --- | --- |
+| 0:00 | Black; a spotlight finds Lou on a marble balcony above a sea of fabs at night | "Every age has its crisis. The Bronze Age ran out of tin. Rome ran out of Rome." |
+| 0:07 | A newspaper the size of a building: **DRAM SHORTAGE!!!** | "Ours has run out of *memory*." |
+| 0:10 | The globe going dark, one city at a time | "Across the world, phones forget. Laptops hesitate. Somewhere, a smart fridge has forgotten what milk is." |
+| 0:17 | Surgeons, traders and a rocket on its pad, all frozen on loading screens | "Surgeons wait. Markets wait. A rocket sits on its pad, buffering." |
+| 0:22 | A wall of progress bars to the horizon, all stuck | "Humanity's progress: *blocked*." |
+| 0:25 | Son of Lou, tiny, alone in a vast room, a laptop stuck at 19% | "My son's progress: blocked. He has been at nineteen percent since Tuesday. He has missed three birthdays." |
+| 0:31 | Lou's fab, glorious and overwhelmed, queues spilling out of its doors | "And I, Lou Latency, owner of the finest fab on Earth, *cannot keep up*." |
+| 0:36 | Lou slams a desk; thunder; a chandelier sways | "This. Is. Unacceptable." |
+| 0:39 | Lou on a cliff, cape streaming, pointing at the dawn | "We must push the frontier!" |
+| 0:42 | A vast banner unfurling across a stormy sky like a royal decree; Lou below, arms wide, in a shaft of sun | "And then, in my darkest hour, Cerebral Valley and Meta opened a hackathon. The very week I needed one. I can only assume it was for me." |
+| 0:49 | An empty office, a cardboard box, a wilting plant | "We had built wonders, and meant to enter the startup track. Our admin forgot to file. History will not remember his name. Neither will I. So I filed it myself." |
+
+## The twin (0:58 to 3:00)
 
 | Time | On screen | Lou says | Ready? |
 | --- | --- | --- | --- |
-| 0:00 | The 3D fab: a slow drone shot over the campus, then Lou walking toward the camera | "Hi. I'm Lou Latency, CEO of a chip fab. Sorry for the wait, I'm still loading. So is my fab, to be honest. My wafers spend most of their childhood waiting in line." | Yes (3D fab; Lou's camera fix is not yet checked on screen) |
-| 0:15 | The browser Floor at 12× speed; hover a polisher showing *Gassed* | "I've got 1,043 machines. Every time one comes free, somebody picks which lot goes next. The rush order? The one that's waited nine hours? The one on a timer that gets scrapped if it's late? We make that call thousands of times a day, on rules of thumb, and find out weeks later if we were right." | Yes |
-| 0:38 | Title card: **Fab Gym**, the twin | "So I built a twin of my fab. Same machines, same routes, simulated exactly. And I staffed it with Meta's models." | Make the card |
-| 0:48 | The ask bar: type a question; the scenario with *said* and *assumed*; a rule as Rust; the scored card | "I ask in plain words. **Muse Spark Open**, Meta's open-weights model, turns my question into an experiment and writes the rule as code. The code runs in a sandbox, the twin races it against my old rule on the same luck, and the card shows only the simulator's numbers, with error bars. I sign, or I don't." | Yes (a live answer needs the Baseten key; otherwise say "a recorded example") |
-| 1:15 | The supervisor result on the site, or the Evidence page | "On my training fab, **Muse Spark** checked in once a day and got 117 more wafers a day out than my old rule." | Yes (the site's table) |
-| 1:25 | The 3D fab: type "Where do wafers get polished?"; the bubble; Lou walks the visitor to the polishing bay | "In the 3D twin, Muse Spark Open is my brain. Big upgrade. Ask me where wafers get polished and I'll answer from the live run and walk you there. Every number I say comes from the simulator. I'm not allowed to make things up. Believe me, I've tried." | Needs one recording with the key (the end-to-end test passed on 4 Nov) |
-| 1:50 | The Build page: Challenge 1, then **Let the AI try** and its move log | "Think you can lay out a fab better than me? Draw one. **Muse Wonder** will race you, with the same moves you've got." | Yes |
-| 2:02 | Build: **Build from a photo**, a fab drawn on paper; the layout appears and the score comes in | "Draw your fab on a napkin, if you must. **Muse Spark** reads it and builds it, and my simulator tells you how bad it is." | Yes (needs a photo of a drawing ready) |
-| 2:15 | The Evidence page; stop on **120 / 120** | "Clever is cheap. So every scored run gets a receipt, and a referee written in Lean checks it. 120 runs, about 423 million machine jobs, all passed. And when the AI didn't beat my old rule on the big fab, we said so." | Yes |
-| 2:35 | The film *Sand to Chip*: 12 seconds, Grain in the quarry, lithography, the chip dancing | "Every fab needs a cinema. **Muse Image** drew this film, and Muse Spark wrote the shots and composed the score, for full orchestra. I have a cameo. It's tasteful." | Yes (from the film file; the cinema screen still shows the old film) |
-| 2:50 | Closing card over the building | "Fab Gym. Meta's models propose, my twin scores, Lean checks, and I sign. By Chetnova: an operating system for your full org. Now if you'll excuse me, I have a polisher to motivate." | Make the card |
+| 0:58 | Title card **Fab Gym** over the Floor at 12× | "So I built my fab a twin. One thousand and forty-three machines, simulated exactly. Staffed entirely by Meta's models." | Make the card |
+| 1:07 | The Floor: a polisher showing *Gassed*, five lots waiting | "Every minute, a thousand machines ask me one question: which lot goes next? For decades, fabs guessed." | Yes |
+| 1:15 | The ask bar; the scenario with *said* and *assumed*; a rule as Rust; the scored card | "Now I ask in plain words. **Muse Spark Open**, Meta's open-weights model, turns my question into an experiment and writes the rule as code. My twin races it against my old rule on the same luck, and shows me only the simulator's numbers. Then I sign. Or I don't." | Yes (live needs the Baseten key) |
+| 1:36 | The supervisor result on the site | "When **Muse Spark** ran my training fab day by day, a hundred and seventeen more wafers a day came out. Naturally." | Yes |
+| 1:45 | The 3D fab: "Where do wafers get polished?"; Lou walks the visitor to the bay | "In my twin, Muse Spark Open is my brain. Ask me anything and I answer from the live run, then walk you there. I am forbidden to make up numbers. It is the only rule I obey." | Record once with the key |
+| 2:04 | Build: **Let the AI try**, then **Build from a photo** | "Think you can run a fab better than me? Draw one. **Muse Wonder** will race you. Or scribble one on a napkin, and Muse Spark will build it, and my simulator will tell you how bad it is." | Yes (a photo of a drawing ready) |
+| 2:20 | The Evidence page; stop on **120 / 120** | "I trust no one. So every run gets a receipt, and a referee written in Lean checks it. A hundred and twenty runs, four hundred and twenty-three million machine jobs. All passed. And when the AI didn't beat my old rule on the big fab, I said so. Humility is also mine." | Yes |
+| 2:38 | *Sand to Chip*, 10 seconds | "Every empire needs a cinema. **Muse Image** drew this film, and Muse Spark composed its score. I have a cameo. It's tasteful." | Yes (the film file) |
+| 2:48 | Closing card over the building | "Fab Gym. Meta's models propose, my twin scores, Lean checks, and I sign. By Chetnova: an operating system for your full org. The world's memory is safe. You may thank me." | Make the card |
 | 2:58 | Fine print, two seconds | (silent) *Lou is a cartoon. His fab is the SMT2020 testbed, a published research model. No real fab's data.* | Make the card |
 
 ## Lines to keep exact
 
-- 1,043 machines; 117 more wafers a day (95% interval 111.5 to 122.5, on a teaching fab of our own); 120 of 120 runs;
-  about 423 million machine jobs. Don't round these differently on screen.
-- Say "my training fab" for the 117 result: it is the teaching fab, not the full SMT2020 fab.
+- 1,043 machines; 117 more wafers a day (95% interval 111.5 to 122.5, on a teaching fab of our own); 120 of 120
+  runs; about 423 million machine jobs.
+- "My training fab" for the 117 result: it is the teaching fab, not the full SMT2020 fab.
+- **The track:** "So I filed it myself" assumes the Startups track, as the site and the form say. Change both lines
+  together if the entry goes in another track.
 - Never say a real fab, TSMC, or that the AI runs the fab. Lou's fab is fiction, and the fine print says so.
 
 ## Words to avoid
 
-"Real fab", "guaranteed", "runs a fab", any placing or prize before it is announced.
+"Real fab", "guaranteed", "runs a fab", any placing or prize before it is announced. The DRAM shortage is Lou's
+excuse for a story; nothing claims Fab Gym ends it.
