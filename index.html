@@ -125,7 +125,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
     <div><b>The video goes here.</b><br>Paste the YouTube video's id into <code>data-youtube</code> on this box, or replace the box with the embed.</div>
   </div>
   <div class="stats">
-    <div class="stat"><div class="n">6</div><div class="l">Meta models at work, two of them open weights</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Meta models at work, including the open-weights Muse Spark Open</div></div>
     <div class="stat"><div class="n">1,000+</div><div class="l">pictures drawn by Muse Image: the cast, posters, the glossary and the film</div></div>
     <div class="stat"><div class="n">120 / 120</div><div class="l">scored runs passed the Lean referee, about 423 million machine jobs</div></div>
     <div class="stat"><div class="n">0</div><div class="l">numbers a model may say that the simulator didn't give it</div></div>
@@ -156,12 +156,6 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
       <dl><dt>Checked by</dt><dd>the editor itself: every move shows on the map, can be undone, and a bad move is refused and shown, not hidden</dd></dl>
     </div>
 
-    <div class="model open">
-      <div><div class="name">Muse Glimmer</div><code>Muse-Glimmer-30B, Q4_K_M</code><br><span class="pill ow">open weights</span><span class="pill t">our own server</span></div>
-      <dl><dt>Its job</dt><dd>The floor coach. Click a machine group and ask "why is the line so long?" Glimmer calls one tool, <code>read_the_hour</code>, gets that hour's numbers and answers in two or three sentences. It runs on our own 16-core server through llama.cpp, with no GPU and no per-question bill.</dd></dl>
-      <dl><dt>Checked by</dt><dd>the number check: an answer quoting any number not in the hour's data is refused, and the card names the number</dd></dl>
-    </div>
-
     <div class="model">
       <div><div class="name">Muse Image</div><code>muse-image-1.0</code><br><span class="pill api">Meta Model API</span></div>
       <dl><dt>Its job</dt><dd>Every picture. The cast: 11 kinds of machine, each in 10 moods read from the run, plus the wafer, the lots and Lou. Posters, the glossary's pictures, and 827 pictures for the film <i>Sand to Chip</i>.</dd></dl>
@@ -169,9 +163,9 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
     </div>
 
     <div class="model tried">
-      <div><div class="name">Tried, and said so</div><code>sam-3.1 · muse-voice-transcribe-1.0</code><br><span class="pill t">not in the demo</span></div>
+      <div><div class="name">Tried, and said so</div><code>sam-3.1 · muse-voice-transcribe-1.0 · Muse-Glimmer-30B</code><br><span class="pill t">not in the demo</span></div>
       <dl><dt>SAM 3.1</dt><dd>Tried for reading sketches: it found nothing in plain line drawings, so the sketch reader uses Muse Spark.</dd></dl>
-      <dl><dt>Voice Transcribe</dt><dd>Wired to a Speak button, but the endpoint didn't answer during the build, so the button stays out of the demo.</dd></dl>
+      <dl><dt>Voice Transcribe</dt><dd>Wired to a Speak button, but the endpoint didn't answer during the build, so the button stays out of the demo.</dd><dt>Muse Glimmer</dt><dd>Running on our own server for a floor coach; its design and tests are written, the coach itself is not built.</dd></dl>
     </div>
   </div>
 </div></section>
@@ -242,7 +236,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </div></section>
 
 <section id="race"><div class="wrap">
-  <div class="kicker">Muse Wonder · Muse Glimmer · the browser fab</div>
+  <div class="kicker">Muse Wonder · Muse Spark · the browser fab</div>
   <h2>Think you can lay out a fab? Race Meta's model.</h2>
   <p class="sub">"In the browser twin you draw your own fab, and the simulator scores it the moment you let go. Muse Wonder plays the same challenges with the same moves you have. Beat it, and I'll consider you for a job."</p>
   <div class="split">
@@ -250,8 +244,8 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
       <div class="shot"><img src="img/build.jpg" alt="The Build page: a fab on grid paper with tools, track and cars, a Challenge met card and confetti"></div>
       <p class="cap">Build: draw a fab on grid paper, and the simulator scores it the moment you stop drawing. Four challenges and a free build.</p>
       <div class="card" style="margin-top:12px">
-        <h3>Muse Glimmer, the floor coach</h3>
-        <p style="margin:0">Click any machine group on the live floor and ask why its line is long. Meta's open Glimmer model answers from that hour's numbers, on our own Linux server, for $0 a question. If it quotes a number the hour doesn't hold, the answer is refused.</p>
+        <h3>Muse Spark reads your napkin</h3>
+        <p style="margin:0">"Build from a photo": snap a drawing of a fab on paper, and Muse Spark reads it into a layout using the same moves a player has. The simulator scores it straight away.</p>
       </div>
     </div>
     <div class="card">
@@ -338,7 +332,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 <footer><div class="wrap">
   <div class="line">Fab Gym, by Chetnova. An operating system for your full org.</div>
   <p><b>Out of character:</b> Lou Latency is a cartoon, and so is his company. His fab is the SMT2020 testbed, a published research model of a wafer fab (1,043 machines in 105 groups, product routes of 583 and 343 steps). No real fab's data is used, and no real fab is claimed.</p>
-  <p>The SMT2020 testbed: Kopp, Hassoun, Kalir and Mönch, <i>SMT2020: A Semiconductor Manufacturing Testbed</i>, IEEE Transactions on Semiconductor Manufacturing, 2020. Made with Meta's Muse Spark Open, Muse Spark, Muse Wonder, Muse Glimmer and Muse Image. 3D in Godot (MIT). Not a real fab; prices are assumed.</p>
+  <p>The SMT2020 testbed: Kopp, Hassoun, Kalir and Mönch, <i>SMT2020: A Semiconductor Manufacturing Testbed</i>, IEEE Transactions on Semiconductor Manufacturing, 2020. Made with Meta's Muse Spark Open, Muse Spark, Muse Wonder and Muse Image. 3D in Godot (MIT). Not a real fab; prices are assumed.</p>
 </div></footer>
 
 <script>

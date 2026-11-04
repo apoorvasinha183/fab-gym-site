@@ -23,8 +23,7 @@ machine why its line is long, or walk the 3D fab while Lou answers questions and
   rule (95% 111.5 to 122.5), for $0.077 over 302 calls. It also reads napkin sketches into fabs, and it wrote the
   film's shot list and composed its 12-cue orchestral score.
 - **Muse Wonder**: the opponent in Race the AI, playing build challenges with the same ten moves as a player.
-- **Muse Glimmer** (open weights, on our own CPU server through llama.cpp): the floor coach, answering from one hour's
-  numbers through a tool call, for $0 a question. Any number it invents is refused.
+- **Muse Spark** also reads a photo of a fab drawn on paper into a layout ("Build from a photo"), using the editor's own moves.
 - **Muse Image**: the whole cast (11 kinds of machine in 10 moods each, the wafer, the lots, Lou), posters, glossary pictures, and the 827
   pictures of the 3:38 film *Sand to Chip*.
 
