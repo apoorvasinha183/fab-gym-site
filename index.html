@@ -141,6 +141,7 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
   .champ.host{grid-column:1 / -1;width:45%;justify-self:center}
   .champ figcaption{width:170px}
 }
+.sub.big{font:500 clamp(18px,2vw,22px)/1.5 var(--display);color:var(--ink);max-width:68ch}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -148,7 +149,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 <body>
 <nav><div class="wrap">
   <b>Fab Gym</b>
-  <a href="#top">Crisis</a><a href="#cast">Cast</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
+  <a href="#top">Crisis</a><a href="#cast">Cast</a><a href="#first">First problem</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
 </div></nav>
 
 <header class="hero" id="top"><div class="wrap">
@@ -206,6 +207,44 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
   <p class="cap">Every champion drawn by Meta's Muse Image from its cast picture; every brag written by Meta's Muse Spark from the machine's real job in the fab, with its numbers checked. The machines are the SMT2020 testbed's generic types.</p>
 </div></section>
 
+<section id="first"><div class="wrap">
+  <div class="kicker">The first problem</div>
+  <h2>Which lot goes next decides our destiny</h2>
+  <p class="sub big">"They asked me for a digital twin, a tiny ask I could finish in a single shot. Yet the world is getting ready, so we will proceed in baby steps. Today we master traffic in my fab, tomorrow every fab on Earth, then the memory of our species. It starts: a machine frees up, five lots wait, rush order, nine hours waiting, setup change, near done, on a timer, across 1,043 machines, which goes next?"</p>
+</div></section>
+
+<section id="rules"><div class="wrap">
+  <div class="kicker">Muse Spark Open · the agent loop</div>
+  <h2>Meta's model drafts my rules. My twin judges them.</h2>
+  <p class="sub">"My fab faces that call thousands of times a day using rules of thumb. Now Muse Spark Open writes the rule, and the twin grades it before it nears a wafer."</p>
+  <div class="loop">
+    <div class="m"><b>You ask</b>in plain words.</div>
+    <div class="m"><b>Muse Spark Open</b>turns it into a scenario that must pass a schema, every value marked said or assumed.</div>
+    <div class="m"><b>It writes rules</b>as small Rust functions, or proposes caps, spare tools and release plans.</div>
+    <div><b>Sandboxed</b>Each rule is compiled to WebAssembly: no imports, 64 MiB of memory, a fuel limit on every decision.</div>
+    <div><b>Scored</b>on training days; the model reads the scores and rewrites. Finalists run once on held-out days against today's rule.</div>
+    <div><b>A person signs</b>The card quotes only the scorer's numbers, with 95% intervals.</div>
+  </div>
+  <div class="split" style="margin-top:26px">
+    <div class="card">
+      <h3>Supervising the fab, day by day</h3>
+      <p>On a teaching fab of our own, Muse Spark looked at the fab once a day, saw only what a supervisor could see, and proposed up to three settings with a reason for each. The simulator tried them on copies and kept the best.</p>
+      <div class="tbl"><table>
+        <tr><th>Over 10 held-out seeds</th><th>Wafers a day</th><th>Against today's rule</th></tr>
+        <tr><td>Today's rule, no cap</td><td class="num">735.0</td><td></td></tr>
+        <tr><td>Muse Spark supervising, a look every 24 h</td><td class="num">852.0</td><td class="num">+117.0 (+111.5 to +122.5)</td></tr>
+        <tr><td>The best fixed setting, found by trying all 24</td><td class="num">851.0</td><td class="num">+116.0 (+109.8 to +122.2)</td></tr>
+      </table></div>
+      <p class="cap">300 looks, 302 model calls, $0.077 in all. The model found the best setting without trying all 24 (+1.0 against it, −1.1 to +3.1: a tie).</p>
+    </div>
+    <div class="card">
+      <h3>And where it didn't win</h3>
+      <p>"I'll be straight with you." On the full SMT2020 fab, over 60 settled days, no policy we tried beat the fab's own rule (1,263 wafers a day) on any of ten held-out seeds, whether written by the model, evolved, or learned with reinforcement learning. Our evolved rules tied it, by copying it. FIFO, shortest-job-first and a PPO policy fell to 595 to 668.</p>
+      <p>We report that plainly. Three days of scoring had made every rule look fine, because a full fab coasts on the work the old rule set up. Fab Gym exists to catch that kind of illusion before a real fab pays for it.</p>
+    </div>
+  </div>
+</div></section>
+
 <section id="watch"><div class="wrap">
   <h2>Tour my empire. Three minutes.</h2>
   <div class="video" id="video" data-youtube="">
@@ -253,38 +292,6 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
       <div><div class="name">Tried, and said so</div><code>sam-3.1 · muse-voice-transcribe-1.0 · Muse-Glimmer-30B</code><br><span class="pill t">not in the demo</span></div>
       <dl><dt>SAM 3.1</dt><dd>Tried for reading sketches: it found nothing in plain line drawings, so the sketch reader uses Muse Spark.</dd></dl>
       <dl><dt>Voice Transcribe</dt><dd>Wired to a Speak button, but the endpoint didn't answer during the build, so the button stays out of the demo.</dd><dt>Muse Glimmer</dt><dd>Running on our own server for a floor coach; its design and tests are written, the coach itself is not built.</dd></dl>
-    </div>
-  </div>
-</div></section>
-
-<section id="rules"><div class="wrap">
-  <div class="kicker">Muse Spark Open · the agent loop</div>
-  <h2>Meta's model drafts my rules. My twin judges them.</h2>
-  <p class="sub">"My morning drama. My polisher frees up. Five lots beg: a rush order, one waiting nine hours, one begging a setup change, one a step from done, one ticking on a timer. Which runs next? My fab faces that call thousands of times a day using rules of thumb. Now Muse Spark Open writes the rule, and the twin grades it before it nears a wafer."</p>
-  <div class="loop">
-    <div class="m"><b>You ask</b>in plain words.</div>
-    <div class="m"><b>Muse Spark Open</b>turns it into a scenario that must pass a schema, every value marked said or assumed.</div>
-    <div class="m"><b>It writes rules</b>as small Rust functions, or proposes caps, spare tools and release plans.</div>
-    <div><b>Sandboxed</b>Each rule is compiled to WebAssembly: no imports, 64 MiB of memory, a fuel limit on every decision.</div>
-    <div><b>Scored</b>on training days; the model reads the scores and rewrites. Finalists run once on held-out days against today's rule.</div>
-    <div><b>A person signs</b>The card quotes only the scorer's numbers, with 95% intervals.</div>
-  </div>
-  <div class="split" style="margin-top:26px">
-    <div class="card">
-      <h3>Supervising the fab, day by day</h3>
-      <p>On a teaching fab of our own, Muse Spark looked at the fab once a day, saw only what a supervisor could see, and proposed up to three settings with a reason for each. The simulator tried them on copies and kept the best.</p>
-      <div class="tbl"><table>
-        <tr><th>Over 10 held-out seeds</th><th>Wafers a day</th><th>Against today's rule</th></tr>
-        <tr><td>Today's rule, no cap</td><td class="num">735.0</td><td></td></tr>
-        <tr><td>Muse Spark supervising, a look every 24 h</td><td class="num">852.0</td><td class="num">+117.0 (+111.5 to +122.5)</td></tr>
-        <tr><td>The best fixed setting, found by trying all 24</td><td class="num">851.0</td><td class="num">+116.0 (+109.8 to +122.2)</td></tr>
-      </table></div>
-      <p class="cap">300 looks, 302 model calls, $0.077 in all. The model found the best setting without trying all 24 (+1.0 against it, −1.1 to +3.1: a tie).</p>
-    </div>
-    <div class="card">
-      <h3>And where it didn't win</h3>
-      <p>"I'll be straight with you." On the full SMT2020 fab, over 60 settled days, no policy we tried beat the fab's own rule (1,263 wafers a day) on any of ten held-out seeds, whether written by the model, evolved, or learned with reinforcement learning. Our evolved rules tied it, by copying it. FIFO, shortest-job-first and a PPO policy fell to 595 to 668.</p>
-      <p>We report that plainly. Three days of scoring had made every rule look fine, because a full fab coasts on the work the old rule set up. Fab Gym exists to catch that kind of illusion before a real fab pays for it.</p>
     </div>
   </div>
 </div></section>
