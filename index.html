@@ -31,14 +31,14 @@ nav .wrap{display:flex;gap:18px;align-items:center;height:54px;overflow-x:auto;w
 nav b{font:800 18px var(--display);margin-right:auto}
 nav a{color:var(--soft);text-decoration:none;font-size:15px}
 nav a:hover{color:var(--ink)}
-header.hero{padding:18px 0 14px}
+header.hero{padding:56px 0 28px}
 .kicker{font:500 13px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--meta)}
 h1{font:800 clamp(40px,7vw,76px)/1.0 var(--display);margin:10px 0 16px;letter-spacing:-.02em}
 h2{font:800 clamp(28px,4vw,42px)/1.1 var(--display);margin:0 0 12px;letter-spacing:-.01em}
 h3{font:600 22px/1.25 var(--display);margin:0 0 6px}
 .lede{font-size:clamp(18px,2.2vw,22px);max-width:62ch;color:var(--soft);margin:0}
 .lede b{color:var(--ink)}
-section{padding:38px 0;border-top:1px solid var(--line)}
+section{padding:56px 0;border-top:1px solid var(--line)}
 .sub{color:var(--soft);max-width:70ch;margin:0 0 26px}
 .heroimg{border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-top:30px}
 .video{aspect-ratio:16/9;border-radius:18px;border:2px dashed var(--line);display:grid;place-items:center;text-align:center;background:var(--paper);color:var(--soft);padding:16px}
@@ -96,14 +96,14 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .guard{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
 .guard div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}
 .guard b{display:block;font:600 18px var(--display);margin-bottom:4px}
-.hero .who{display:inline;font-size:14px;margin-left:6px;color:var(--soft)}
-.cycle{position:relative;margin:22px auto 8px;max-width:660px;aspect-ratio:16/10;background:var(--paper);border:1px solid var(--line);border-radius:22px;color:var(--rose)}
+.hero .who{display:block;font-size:15px;margin-top:6px;color:var(--soft)}
+.cycle{position:relative;margin:22px auto 8px;max-width:880px;aspect-ratio:16/10;background:var(--paper);border:1px solid var(--line);border-radius:22px;color:var(--rose)}
 .cycle .ring{position:absolute;inset:0;width:100%;height:100%}
 .cycle .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;width:26%}
 .cycle .core span{display:block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
 .cycle .core b{display:block;font:800 clamp(18px,2.4vw,28px)/1.05 var(--display);color:var(--rose);margin:4px 0}
 .cycle .core i{font-size:14px;color:var(--soft)}
-.cycle .node{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:19.5%;margin:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:5px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.cycle .node{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:17%;margin:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:5px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
 .cycle .node img{width:100%;display:block;border-radius:8px;aspect-ratio:16/9;object-fit:cover}
 .cycle .node figcaption{font-size:11.5px;line-height:1.3;color:var(--soft);padding:5px 3px 2px}
 .cycle .node figcaption b{display:block;color:var(--ink);font-size:12.5px}
@@ -123,10 +123,10 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
   .strip{grid-template-columns:1fr 1fr}
   .strip figure::after{display:none}
 }
-.stage{position:relative;max-width:540px;margin:18px auto 8px;aspect-ratio:1/0.86;background:radial-gradient(ellipse at 50% 45%,#2a2230 0%,var(--paper) 70%);border:1px solid var(--line);border-radius:22px}
-.champ{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:14.5%;margin:0;cursor:pointer;z-index:1}
+.stage{position:relative;max-width:720px;margin:18px auto 8px;aspect-ratio:1/0.86;background:radial-gradient(ellipse at 50% 45%,#2a2230 0%,var(--paper) 70%);border:1px solid var(--line);border-radius:22px}
+.champ{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:11.5%;margin:0;cursor:pointer;z-index:1}
 .champ img{width:100%;display:block;aspect-ratio:1;object-fit:cover;border-radius:12px;border:2px solid var(--line);transition:border-color .15s,transform .15s}
-.champ.host{left:50%;top:50%;width:27%}
+.champ.host{left:50%;top:50%;width:23%}
 .champ.host img{border-color:var(--gold)}
 .champ figcaption{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:190px;padding:9px 11px 10px;border-radius:12px;border:1.5px solid var(--gold);background:rgba(10,10,14,.95);color:#f4f1ea;font-size:11px;line-height:1.35;box-shadow:0 8px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transition:opacity .12s;pointer-events:none;display:flex;flex-direction:column;gap:2px;z-index:6}
 .champ figcaption b{font:700 12.5px/1.2 var(--display)}
@@ -141,24 +141,6 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
   .champ.host{grid-column:1 / -1;width:45%;justify-self:center}
   .champ figcaption{width:170px}
 }
-.hero{padding:16px 0 18px}
-.hero h1{font-size:clamp(28px,3.8vw,48px);margin:4px 0 6px}
-.hero .lede{font-size:clamp(15px,1.45vw,17.5px);max-width:none}
-.heroGrid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:start;margin-top:10px}
-.heroGrid .cycle{margin:0;max-width:none;aspect-ratio:100/92}
-.heroGrid .cycle .node{width:23%;padding:4px}
-.heroGrid .cycle .node figcaption{font-size:10.5px;line-height:1.25;padding:4px 2px 1px}
-.heroGrid .cycle .node figcaption b{font-size:11.5px}
-.heroGrid .cycle .core{width:30%}
-.heroGrid .wayout{margin:0}
-.heroGrid .strip{grid-template-columns:1fr;gap:6px;margin:6px 0 10px}
-.heroGrid .strip figure{display:grid;grid-template-columns:84px 1fr;gap:10px;align-items:center;padding:5px}
-.heroGrid .strip figure::after{content:"↓";right:auto;left:42px;top:auto;bottom:-13px;font-size:12px;z-index:2}
-.heroGrid .strip figure:last-child::after{display:none}
-.heroGrid .strip figcaption{padding:0;font-size:12px}
-.heroGrid .lede.small{font-size:15.5px}
-@media (max-width:980px){.heroGrid{grid-template-columns:1fr}}
-.video{max-width:760px;margin:0 auto}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -173,10 +155,9 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
   <div class="kicker">Meta Global AI Developer Hackathon · Indie track · Push the Frontier</div>
   <h1>The world ran out of memory. On my watch.</h1>
   <p class="lede">"A DRAM shortage. Fabs can't keep up, devices run short, everything stalls, progress dies, the shortage feasts. <b>Tragic for humanity.</b> Catastrophic for me." <span class="who">— Lou Latency, owner of the finest fab on Earth</span></p>
-  <div class="heroGrid">
   <div class="cycle" role="img" aria-label="A vicious cycle: a DRAM shortage, fabs can't keep up, devices go short, everything waits, progress stalls, even Son of Lou is stuck, and round again. In the middle: bad for humanity.">
-    <svg class="ring" viewBox="0 0 100 92" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4.2" markerHeight="4.2" orient="auto-start-reverse"><path d="M0,0.8 L9,5 L0,9.2 L2.2,5 z" fill="currentColor"/></marker></defs>
-      <g fill="none" stroke="currentColor" stroke-width="0.6" stroke-linecap="round"><path d="M63.26,15.94 L63.71,16.09 L64.16,16.25 L64.61,16.41 L65.05,16.58 L65.49,16.76 L65.93,16.94 L66.36,17.12 L66.80,17.31 L67.23,17.50 L67.65,17.70 L68.08,17.91 L68.50,18.11 L68.92,18.33 L69.33,18.54 L69.74,18.77 L70.15,18.99 L70.56,19.23 L70.96,19.46 L71.35,19.70 L71.75,19.95 L72.14,20.20 L72.52,20.45 L72.91,20.71 L73.28,20.98" marker-end="url(#ah)"/><path d="M86.80,42.63 L86.83,42.91 L86.86,43.19 L86.89,43.47 L86.91,43.75 L86.93,44.03 L86.95,44.31 L86.96,44.60 L86.98,44.88 L86.99,45.16 L86.99,45.44 L87.00,45.72 L87.00,46.00 L87.00,46.28 L86.99,46.56 L86.99,46.84 L86.98,47.12 L86.96,47.40 L86.95,47.69 L86.93,47.97 L86.91,48.25 L86.89,48.53 L86.86,48.81 L86.83,49.09 L86.80,49.37" marker-end="url(#ah)"/><path d="M73.28,71.02 L72.91,71.29 L72.52,71.55 L72.14,71.80 L71.75,72.05 L71.35,72.30 L70.96,72.54 L70.56,72.77 L70.15,73.01 L69.74,73.23 L69.33,73.46 L68.92,73.67 L68.50,73.89 L68.08,74.09 L67.65,74.30 L67.23,74.50 L66.80,74.69 L66.36,74.88 L65.93,75.06 L65.49,75.24 L65.05,75.42 L64.61,75.59 L64.16,75.75 L63.71,75.91 L63.26,76.06" marker-end="url(#ah)"/><path d="M36.74,76.06 L36.29,75.91 L35.84,75.75 L35.39,75.59 L34.95,75.42 L34.51,75.24 L34.07,75.06 L33.64,74.88 L33.20,74.69 L32.77,74.50 L32.35,74.30 L31.92,74.09 L31.50,73.89 L31.08,73.67 L30.67,73.46 L30.26,73.23 L29.85,73.01 L29.44,72.77 L29.04,72.54 L28.65,72.30 L28.25,72.05 L27.86,71.80 L27.48,71.55 L27.09,71.29 L26.72,71.02" marker-end="url(#ah)"/><path d="M13.20,49.37 L13.17,49.09 L13.14,48.81 L13.11,48.53 L13.09,48.25 L13.07,47.97 L13.05,47.69 L13.04,47.40 L13.02,47.12 L13.01,46.84 L13.01,46.56 L13.00,46.28 L13.00,46.00 L13.00,45.72 L13.01,45.44 L13.01,45.16 L13.02,44.88 L13.04,44.60 L13.05,44.31 L13.07,44.03 L13.09,43.75 L13.11,43.47 L13.14,43.19 L13.17,42.91 L13.20,42.63" marker-end="url(#ah)"/><path d="M26.72,20.98 L27.09,20.71 L27.48,20.45 L27.86,20.20 L28.25,19.95 L28.65,19.70 L29.04,19.46 L29.44,19.23 L29.85,18.99 L30.26,18.77 L30.67,18.54 L31.08,18.33 L31.50,18.11 L31.92,17.91 L32.35,17.70 L32.77,17.50 L33.20,17.31 L33.64,17.12 L34.07,16.94 L34.51,16.76 L34.95,16.58 L35.39,16.41 L35.84,16.25 L36.29,16.09 L36.74,15.94" marker-end="url(#ah)"/></g>
+    <svg class="ring" viewBox="0 0 160 100" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4.2" markerHeight="4.2" orient="auto-start-reverse"><path d="M0,0.8 L9,5 L0,9.2 L2.2,5 z" fill="currentColor"/></marker></defs>
+      <g fill="none" stroke="currentColor" stroke-width="0.85" stroke-linecap="round"><path d="M99.27,16.91 L100.17,17.09 L101.05,17.29 L101.94,17.49 L102.81,17.70 L103.68,17.92 L104.55,18.15 L105.41,18.39 L106.26,18.63 L107.11,18.88 L107.94,19.14 L108.78,19.41 L109.60,19.69 L110.42,19.97 L111.23,20.26 L112.03,20.56 L112.82,20.87 L113.60,21.18 L114.38,21.51 L115.14,21.83 L115.90,22.17 L116.65,22.51 L117.39,22.86 L118.12,23.22 L118.84,23.59" marker-end="url(#ah)"/><path d="M138.69,45.43 L138.77,45.81 L138.85,46.19 L138.91,46.57 L138.97,46.95 L139.03,47.33 L139.07,47.71 L139.11,48.09 L139.14,48.47 L139.17,48.85 L139.19,49.24 L139.20,49.62 L139.20,50.00 L139.20,50.38 L139.19,50.76 L139.17,51.15 L139.14,51.53 L139.11,51.91 L139.07,52.29 L139.03,52.67 L138.97,53.05 L138.91,53.43 L138.85,53.81 L138.77,54.19 L138.69,54.57" marker-end="url(#ah)"/><path d="M118.84,76.41 L118.12,76.78 L117.39,77.14 L116.65,77.49 L115.90,77.83 L115.14,78.17 L114.38,78.49 L113.60,78.82 L112.82,79.13 L112.03,79.44 L111.23,79.74 L110.42,80.03 L109.60,80.31 L108.78,80.59 L107.94,80.86 L107.11,81.12 L106.26,81.37 L105.41,81.61 L104.55,81.85 L103.68,82.08 L102.81,82.30 L101.94,82.51 L101.05,82.71 L100.17,82.91 L99.27,83.09" marker-end="url(#ah)"/><path d="M60.73,83.09 L59.83,82.91 L58.95,82.71 L58.06,82.51 L57.19,82.30 L56.32,82.08 L55.45,81.85 L54.59,81.61 L53.74,81.37 L52.89,81.12 L52.06,80.86 L51.22,80.59 L50.40,80.31 L49.58,80.03 L48.77,79.74 L47.97,79.44 L47.18,79.13 L46.40,78.82 L45.62,78.49 L44.86,78.17 L44.10,77.83 L43.35,77.49 L42.61,77.14 L41.88,76.78 L41.16,76.41" marker-end="url(#ah)"/><path d="M21.31,54.57 L21.23,54.19 L21.15,53.81 L21.09,53.43 L21.03,53.05 L20.97,52.67 L20.93,52.29 L20.89,51.91 L20.86,51.53 L20.83,51.15 L20.81,50.76 L20.80,50.38 L20.80,50.00 L20.80,49.62 L20.81,49.24 L20.83,48.85 L20.86,48.47 L20.89,48.09 L20.93,47.71 L20.97,47.33 L21.03,46.95 L21.09,46.57 L21.15,46.19 L21.23,45.81 L21.31,45.43" marker-end="url(#ah)"/><path d="M41.16,23.59 L41.88,23.22 L42.61,22.86 L43.35,22.51 L44.10,22.17 L44.86,21.83 L45.62,21.51 L46.40,21.18 L47.18,20.87 L47.97,20.56 L48.77,20.26 L49.58,19.97 L50.40,19.69 L51.22,19.41 L52.06,19.14 L52.89,18.88 L53.74,18.63 L54.59,18.39 L55.45,18.15 L56.32,17.92 L57.19,17.70 L58.06,17.49 L58.95,17.29 L59.83,17.09 L60.73,16.91" marker-end="url(#ah)"/></g>
     </svg>
     
     <div class="core"><span>the vicious cycle</span><b>Bad for humanity.</b><i>and worse, for Lou</i></div>
@@ -198,7 +179,6 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
       <figure><img src="img/opener/12-build.jpg" alt="A fab under construction where every worker is Lou, drawn with Muse Image" loading="lazy"><figcaption><b>Fine then</b>Fired them all! I'll build my golden fab myself in the Indie track!</figcaption></figure>
     </div>
     <p class="lede small">"So I built my fab a twin, <b>Fab Gym</b>: 1,043 machines, simulated exactly, where <b>Meta's models</b> prove themselves before my wafers pay. Let me show you."</p>
-  </div>
   </div>
   <p class="cap">Every picture drawn by Meta's Muse Image, every Lou from his cast portrait; every word Lou says on this page written by Meta's Muse Spark from our brief, with the facts and numbers locked. Lou is a cartoon, and so is his crisis. His fab is the SMT2020 testbed.</p>
 </div></header>
