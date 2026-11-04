@@ -20,7 +20,8 @@ Opener pictures are drawn with Muse Image; the rest is real footage. **Ready?** 
 | 0:36 | Lou slams a desk; thunder; a chandelier sways | "This. Is. Unacceptable." |
 | 0:39 | Lou on a cliff, cape streaming, pointing at the dawn | "We must push the frontier!" |
 | 0:42 | A vast banner unfurling across a stormy sky like a royal decree; Lou below, arms wide, in a shaft of sun | "And then, in my darkest hour, Cerebral Valley and Meta opened a hackathon. The very week I needed one. I can only assume it was for me." |
-| 0:49 | An empty office, a cardboard box, a wilting plant | "We had built wonders, and meant to enter as a startup. But our admin forgot to file the incorporation papers. Legally, we are not a company. History will not remember his name. Neither will I. Fine. I will push the frontier myself." |
+| 0:49 | An empty office, a cardboard box, a wilting plant | "We had built wonders, and meant to enter as a startup. But our admin forgot to incorporate us. History will not remember his name. Neither will I. He was fired." |
+| 0:55 | A fab under construction, and every worker on site is Lou | "Fine. I will do it myself." |
 
 ## The twin (0:58 to 3:00)
 
