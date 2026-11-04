@@ -158,6 +158,10 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .posters figure{margin:0;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .posters img{width:100%;display:block;aspect-ratio:2/3;object-fit:cover}
 @media (max-width:560px){.posters{grid-template-columns:1fr 1fr;gap:10px}}
+.playrow{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 6px}
+.playbtn{display:inline-block;background:var(--meta);color:#fff;font-weight:700;text-decoration:none;border-radius:999px;padding:10px 18px}
+.playbtn.alt{background:transparent;color:var(--meta);border:1.5px solid var(--meta)}
+nav a.navplay{color:var(--meta);font-weight:700}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -165,7 +169,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 <body>
 <nav><div class="wrap">
   <b>Fab Gym</b>
-  <a href="#top">Crisis</a><a href="#cast">Cast</a><a href="#first">First problem</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
+  <a class="navplay" href="play/index.html#floor">Play the fab</a><a href="#top">Crisis</a><a href="#cast">Cast</a><a href="#first">First problem</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
 </div></nav>
 
 <header class="hero" id="top"><div class="wrap">
@@ -197,7 +201,8 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
     </div>
     <p class="lede small">"So I built my fab a twin, <b>Fab Gym</b>: 1,043 machines, simulated exactly, where <b>Meta's models</b> prove themselves before my wafers pay. Let me show you."</p>
   </div>
-  <p class="cap">Every picture drawn by Meta's Muse Image, every Lou from his cast portrait; every word Lou says on this page written by Meta's Muse Spark from our brief, with the facts and numbers locked. Lou is a cartoon, and so is his crisis. His fab is the SMT2020 testbed.</p>
+    <p class="playrow"><a class="playbtn" href="play/index.html#floor">▶ Play the fab in your browser</a><a class="playbtn alt" href="https://github.com/apoorvasinha183/fab-gym/releases/latest">Walk it in 3D: Mac and Windows</a><a class="playbtn alt" href="https://github.com/apoorvasinha183/fab-gym">The code</a></p>
+<p class="cap">Every picture drawn by Meta's Muse Image, every Lou from his cast portrait; every word Lou says on this page written by Meta's Muse Spark from our brief, with the facts and numbers locked. Lou is a cartoon, and so is his crisis. His fab is the SMT2020 testbed.</p>
 </div></header>
 
 <section id="cast"><div class="wrap">

@@ -1,0 +1,782 @@
+// The map editor's pure parts (docs/EDITOR.md): templates, the map as a fab file, and a block's mood from a run.
+// In the page this defines window.FabEditor; under Node, module.exports. A fab built from the SMT2020 testbed
+// (a published set of a fab's tool groups, routes and times), or a teaching fab of our own; not a real fab.
+(function (root) {
+  "use strict";
+
+  const TILE_M = 3; // metres a tile (decided by quiz 31 Oct)
+  // the cast's areas (web/cast/cast.json), in the order the templates lay them out
+  const AREAS = ["litho", "lithomet", "dry", "wet", "diff", "diel", "tf", "tfmet", "imp", "cmp", "defmet"];
+  const AREA_OF = { Litho: "litho", Litho_Met: "lithomet", Dry_Etch: "dry", Wet_Etch: "wet", Diffusion: "diff", Dielectric: "diel", TF: "tf", TF_Met: "tfmet", Implant: "imp", Planar: "cmp", Def_Met: "defmet" };
+  // a tie between moods goes to the more serious
+  const SERIOUS = ["hurt", "physio", "hold", "full", "tired", "batch", "setup", "pm", "sleep", "work"];
+  const D = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+
+  // The teaching fab: one small group per cast area and an 18-step route, a lot every 30 minutes (all assumed).
+  const T_GROUPS = [["Litho_T", 3], ["Litho_Met_T", 1], ["Dry_Etch_T", 3], ["Wet_Etch_T", 3], ["Diffusion_T", 2], ["Dielectric_T", 1], ["TF_T", 2], ["TF_Met_T", 1], ["Implant_T", 1], ["Planar_T", 2], ["Def_Met_T", 1]];
+  const T_ROUTE = ["Diffusion_T", "Litho_T", "Litho_Met_T", "Dry_Etch_T", "Wet_Etch_T", "TF_T", "TF_Met_T", "Planar_T", "Def_Met_T", "Implant_T", "Litho_T", "Litho_Met_T", "Dry_Etch_T", "Wet_Etch_T", "Dielectric_T", "Planar_T", "Def_Met_T", "Wet_Etch_T"];
+  const T_MINUTES = { Litho_T: 40, Litho_Met_T: 12, Dry_Etch_T: 35, Wet_Etch_T: 25, Diffusion_T: 50, Dielectric_T: 20, TF_T: 30, TF_Met_T: 10, Implant_T: 18, Planar_T: 35, Def_Met_T: 14 };
+  const step = (g) => `step\t${g}\tlot\t${T_MINUTES[g].toFixed(1)}\t0.0\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-`;
+  const TEACHING_SHOP = ["fabgym-shop 1", "transport\t0.0\t0.0", ...T_GROUPS.map(([g, n]) => `group\t${g}\t${n}\t0.0\t0.0\t-\t-\t-`), "route\tteach", ...T_ROUTE.map(step), "release\tteach\t25\t1.0\t30.0\t0.0\t-\tLot", ""].join("\n");
+
+  const key = (x, y) => `${x},${y}`;
+  const nodeId = (x, y) => `c${x}_${y}`;
+  function cellOfNode(id) {
+    const m = /^c(\d+)_(\d+)$/.exec(id);
+    return m ? [Number(m[1]), Number(m[2])] : null;
+  }
+
+  /** A fab laid out in bays by area along a two-lane spine with U-turns at both ends. `groups`: [{name, area, count}];
+   * `depth`: rows of blocks above and below the spine (even). Each bay holds two columns of 2x2 blocks round its
+   * one-way loop, its last slot a stocker. */
+  function bays(groups, depth, stores) {
+    const perCol = depth / 2, perBay = 2 * perCol - 1;
+    const nb = Math.max(1, Math.ceil(groups.length / perBay));
+    const north = Math.ceil(nb / 2);
+    const ys = 2 + depth; // north lane; the south lane is ys + 1
+    const yb = ys + 2 + depth; // the south bays' far rail
+    const W = 2 + 6 * north + 3, H = yb + 1;
+    const rail = {};
+    const out = (x, y, d, spine) => {
+      const k = key(x, y);
+      if (!rail[k]) rail[k] = { o: [0, 0, 0, 0] };
+      if (d != null) rail[k].o[d] = 1;
+      if (spine) rail[k].spine = true;
+    };
+    for (let x = 1; x <= W - 3; x++) out(x, ys, 0, true);
+    out(W - 2, ys, 1, true);
+    for (let x = W - 2; x >= 2; x--) out(x, ys + 1, 2, true);
+    out(1, ys + 1, 3, true);
+    const blocks = [];
+    let gi = 0, id = 1;
+    const place = (x, y, bayGroups) => {
+      if (bayGroups.length) {
+        const g = bayGroups.shift();
+        blocks.push({ id: id++, kind: "group", group: g.name, area: g.area, count: g.count, x, y, w: 2, h: 2 });
+      }
+    };
+    for (let b = 0; b < nb; b++) {
+      const south = b >= north, a = 2 + 6 * (south ? b - north : b);
+      const mine = groups.slice(gi, gi + perBay);
+      gi += perBay;
+      if (!south) {
+        out(a, ys, 3);
+        for (let y = ys - 1; y >= 2; y--) out(a, y, 3);
+        out(a, 1, 0); out(a + 1, 1, 0); out(a + 2, 1, 0); out(a + 3, 1, 1);
+        for (let y = 2; y < ys; y++) out(a + 3, y, 1);
+        for (let r = 0; r < perCol; r++) place(a + 1, 2 + 2 * r, mine);
+        for (let r = 0; r < perCol - 1; r++) place(a + 4, 2 + 2 * r, mine);
+        blocks.push({ id: id++, kind: "stocker", x: a + 4, y: 2 + 2 * (perCol - 1), w: 2, h: 2 });
+      } else {
+        out(a + 3, ys + 1, 1);
+        for (let y = ys + 2; y < yb; y++) out(a + 3, y, 1);
+        out(a + 3, yb, 2); out(a + 2, yb, 2); out(a + 1, yb, 2); out(a, yb, 3);
+        for (let y = yb - 1; y >= ys + 2; y--) out(a, y, 3);
+        for (let r = 0; r < perCol; r++) place(a + 1, ys + 2 + 2 * r, mine);
+        for (let r = 0; r < perCol - 1; r++) place(a + 4, ys + 2 + 2 * r, mine);
+        blocks.push({ id: id++, kind: "stocker", x: a + 4, y: ys + 2 + 2 * (perCol - 1), w: 2, h: 2 });
+      }
+    }
+    blocks.push({ id: id++, kind: "entry", x: 0, y: ys, w: 1, h: 2 });
+    blocks.push({ id: id++, kind: "exit", x: W - 1, y: ys, w: 1, h: 2 });
+    return { W, H, blocks, rail, stores: stores || [] };
+  }
+
+  /** A template: "teaching", or "smt2020" with {shop, areas} (the floor page's web/data files). */
+  function template(name, data) {
+    if (name === "teaching") {
+      const groups = T_GROUPS.map(([g, n]) => ({ name: g, area: AREA_OF[g.replace(/_T$/, "")], count: n }));
+      const s = bays(groups, 4, []);
+      s.vehicles = 12;
+      return s;
+    }
+    if (name === "smt2020") {
+      const areaOf = {};
+      for (const l of data.areas.split("\n")) {
+        const [g, a] = l.split("\t");
+        if (g) areaOf[g] = a;
+      }
+      const groups = [], stores = [];
+      for (const l of data.shop.split("\n")) {
+        if (!l.startsWith("group\t")) continue;
+        const f = l.split("\t");
+        const area = AREA_OF[areaOf[f[1]]];
+        if (!area) stores.push(f[1]);
+        else groups.push({ name: f[1], area, count: Number(f[2]) });
+      }
+      groups.sort((a, b) => AREAS.indexOf(a.area) - AREAS.indexOf(b.area) || (a.name < b.name ? -1 : 1));
+      const s = bays(groups, 8, stores);
+      s.vehicles = 120;
+      return s;
+    }
+    throw new Error(`no template ${name}`);
+  }
+
+  /** Rail cells beside a block (its border ring, corners left out), in a fixed order. */
+  function beside(s, b) {
+    const cells = [];
+    for (let x = b.x; x < b.x + b.w; x++) cells.push([x, b.y - 1], [x, b.y + b.h]);
+    for (let y = b.y; y < b.y + b.h; y++) cells.push([b.x - 1, y], [b.x + b.w, y]);
+    return cells.filter(([x, y]) => s.rail[key(x, y)]);
+  }
+
+  /** The map's plan records (docs/FAB-FILE.md). */
+  function toPlan(s) {
+    const lines = [];
+    const cells = Object.keys(s.rail).map((k) => k.split(",").map(Number)).sort((a, b) => a[1] - b[1] || a[0] - b[0]);
+    for (const [x, y] of cells) lines.push(`node\t${nodeId(x, y)}\t${(x * TILE_M).toFixed(1)}\t${(y * TILE_M).toFixed(1)}`);
+    for (const [x, y] of cells) {
+      s.rail[key(x, y)].o.forEach((on, d) => {
+        const nx = x + D[d][0], ny = y + D[d][1];
+        if (on && s.rail[key(nx, ny)]) lines.push(`link\t${nodeId(x, y)}\t${nodeId(nx, ny)}\t${TILE_M.toFixed(1)}`);
+      });
+    }
+    const groups = s.blocks.filter((b) => b.kind === "group");
+    for (const b of groups) lines.push(`station\t${b.group}\t${(b.x * TILE_M).toFixed(1)}\t${(b.y * TILE_M).toFixed(1)}\t${(b.w * TILE_M).toFixed(1)}\t${(b.h * TILE_M).toFixed(1)}`);
+    // a group may stand in several places (docs/BUILD-CONTROLS.md, part 2): its machines are numbered once across them
+    const nextTool = {};
+    for (const b of groups) {
+      const c = beside(s, b), base = nextTool[b.group] || 0;
+      nextTool[b.group] = base + b.count;
+      if (!c.length) continue;
+      for (let k = 0; k < b.count; k++) lines.push(`stop\t${b.group}\t${base + k}\t${nodeId(...c[k % c.length])}`);
+    }
+    const seen = new Set();
+    for (const b of s.blocks.filter((b) => b.kind === "stocker")) {
+      const c = beside(s, b)[0];
+      if (c && !seen.has(nodeId(...c))) {
+        seen.add(nodeId(...c));
+        lines.push(`stocker\t${nodeId(...c)}`);
+      }
+    }
+    for (const kind of ["entry", "exit"]) {
+      for (const b of s.blocks.filter((b) => b.kind === kind)) {
+        const c = beside(s, b)[0];
+        if (c) lines.push(`${kind}\t${nodeId(...c)}`);
+      }
+    }
+    for (const g of s.stores || []) lines.push(`store\t${g}`);
+    return lines;
+  }
+
+  /** The fab file: the base shop with each placed group's count set, a fleet when the base has none, and the plan. */
+  function fabText(base, s, opts) {
+    const counts = {};
+    for (const b of s.blocks) if (b.kind === "group") counts[b.group] = (counts[b.group] || 0) + b.count; // across its places
+    const vehicles = (opts && opts.vehicles) || s.vehicles || 12;
+    const out = [];
+    let fleet = base.split("\n").some((l) => l.startsWith("fleet\t"));
+    for (const l of base.split("\n")) {
+      if (!l) continue;
+      if (l.startsWith("group\t")) {
+        const f = l.split("\t");
+        if (counts[f[1]] != null) f[2] = String(counts[f[1]]);
+        out.push(f.join("\t"));
+      } else out.push(l);
+      if (!fleet && l.startsWith("transport\t")) {
+        out.push(`fleet\t${vehicles}\t3.0\t1.0\t2\t60.0\tnearest`);
+        fleet = true;
+      }
+    }
+    // the Floor's settings: dispatch rule, demand, urgent lots, rework and quality holds (docs/BUILD-CONTROLS.md, part 4)
+    const ran = applyFlow(out, s.flow);
+    out.length = 0; out.push(...ran);
+    if (s.cap) out.splice(out.findIndex((l) => l.startsWith("transport\t")) + 1, 0, `cap\t${s.cap}`);
+    // load ports per machine: lots beyond them wait in storage (docs/BUILD-CONTROLS.md, part 3)
+    if (s.inports) out.splice(out.findIndex((l) => l.startsWith("transport\t")) + 1, 0, `inports\t${s.inports}`);
+    const prices = (opts && opts.prices === false) ? [] : s.blocks.filter((b) => b.kind === "group" && PRICE[b.area])
+      .map((b) => `price\t${b.group}\t${PRICE[b.area].toFixed(1)}\t${(PRICE[b.area] / 2000).toFixed(1)}`);
+    return [...out, ...toPlan(s), ...prices, ""].join("\n");
+  }
+
+  // ---------- the Floor's settings in Build (docs/BUILD-CONTROLS.md, part 4)
+  const fnum = (x) => (Number.isInteger(x) ? x.toFixed(1) : String(+x.toFixed(6)));
+  const isCheck = (g) => /_Met_T$/.test(g); // the teaching fab's three measuring machines
+  /** The urgent priority of an added stream, as a lot made hot on the Floor. */
+  const URGENT_PRIORITY = 20;
+  /** The assumed quality hold at On, in minutes: the measuring machine, the lookback, the lots (as on the Floor). */
+  const HOLDS = [120, 240, 60];
+  const releasesOf = (lines) => lines.filter((l) => l.startsWith("release\t")).map((l) => l.split("\t"));
+  const lowestOf = (lines) => Math.min(...releasesOf(lines).map((r) => +r[3]));
+  /** Does the fab file have urgent lots of its own (a release above the lowest priority), and rework of its own? */
+  function flowKind(base) {
+    const lines = base.split("\n"), low = lowestOf(lines);
+    return {
+      hot: releasesOf(lines).some((r) => +r[3] > low),
+      rework: lines.some((l) => l.startsWith("step\t") && l.split("\t")[11] !== "-"),
+    };
+  }
+  /** The choices for each setting on this fab file, today's first: [value, label]. */
+  function flowOptions(base) {
+    const k = flowKind(base);
+    return {
+      rule: [["", "Today's rule: urgent first, then no re-setup, then oldest"], ["fifo", "First come, first served"], ["spt", "Quickest job first"]],
+      demand: [["", "×1, as now"], ["0.5", "×0.5"], ["0.75", "×0.75"], ["1.25", "×1.25"], ["1.5", "×1.5"]],
+      urgent: k.hot ? [["", "As the fab has them (×1)"], ["none", "None"], ["x0.5", "×0.5"], ["x2", "×2"]]
+        : [["", "None"], ["1in10", "1 for every 10 lots"], ["1in5", "1 for every 5 lots"]],
+      rework: k.rework ? [["", "As the fab has it (×1)"], ["none", "None"], ["x2", "×2"], ["x4", "×4"]]
+        : [["", "None"], ["p0.01", "1% of lots at each check"], ["p0.02", "2% of lots at each check"], ["p0.05", "5% of lots at each check"]],
+      holds: [["", "Off"], ["1", "On: 120 min, lots 60 min"], ["2", "×2: 240 min, lots 120 min"]],
+    };
+  }
+  /** A fab file's lines with the settings applied; with none set, the lines as they are. */
+  function applyFlow(lines, flow) {
+    const f = flow || {};
+    let out = lines.slice();
+    const low = lowestOf(out);
+    const rel = (fn) => (out = out.map((l) => (l.startsWith("release\t") ? fn(l.split("\t")).join("\t") : l)));
+    if (f.demand && f.demand !== 1) rel((r) => { r[4] = fnum(+r[4] / f.demand); return r; });
+    if (f.urgent === "none") out = out.filter((l) => !(l.startsWith("release\t") && +l.split("\t")[3] > low));
+    else if (/^x[\d.]+$/.test(f.urgent || "")) { const k = +f.urgent.slice(1); rel((r) => { if (+r[3] > low) r[4] = fnum(+r[4] / k); return r; }); }
+    else if (/^1in\d+$/.test(f.urgent || "")) {
+      // one more release beside each regular one: the regular gap times N, its first lot half a regular gap in
+      const n = +f.urgent.slice(3);
+      out = out.flatMap((l) => {
+        if (!l.startsWith("release\t") || +l.split("\t")[3] > low) return [l];
+        const r = l.split("\t");
+        return [l, [r[0], r[1], r[2], fnum(URGENT_PRIORITY), fnum(+r[4] * n), fnum(+r[5] + +r[4] / 2), "-", "Hot"].join("\t")];
+      });
+    }
+    if (f.rework) {
+      let i = -1;
+      out = out.map((l) => {
+        if (l.startsWith("route\t")) i = -1;
+        if (!l.startsWith("step\t")) return l;
+        i++;
+        const st = l.split("\t");
+        if (f.rework === "none") { st[11] = "-"; st[12] = "-"; }
+        else if (f.rework[0] === "x") { if (st[11] !== "-") st[12] = fnum(Math.min(1, +st[12] * +f.rework.slice(1))); }
+        else if (f.rework[0] === "p" && isCheck(st[1]) && i > 0 && st[11] === "-") { st[11] = String(i - 1); st[12] = fnum(+f.rework.slice(1)); }
+        return st.join("\t");
+      });
+    }
+    const head = [];
+    if (f.rule) head.push(`dispatch\t${f.rule}`);
+    if (f.holds) { out = out.filter((l) => !l.startsWith("defects\t")); head.push(`defects\t${HOLDS.map((m) => fnum(m * f.holds)).join("\t")}`); }
+    if (head.length) out.splice(out.findIndex((l) => l.startsWith("transport\t")) + 1, 0, ...head);
+    return out;
+  }
+  /** What the settings change, in words, for a banner ("" when none is set). */
+  function flowWords(flow, base) {
+    const f = flow || {}, o = flowOptions(base), parts = [];
+    const lab = (k) => ((o[k].find(([v]) => v === String(f[k])) || [])[1] || String(f[k])).toLowerCase();
+    if (f.rule) parts.push(lab("rule"));
+    if (f.demand && f.demand !== 1) parts.push(`demand ×${f.demand}`);
+    if (f.urgent) parts.push(`urgent lots ${lab("urgent")}`);
+    if (f.rework) parts.push(`rework ${lab("rework")}`);
+    if (f.holds) parts.push(`quality holds ${f.holds === 1 ? "on" : "×" + f.holds}`);
+    return parts.join(", ");
+  }
+
+  // Dollars to buy one tool of an area (assumed for the gym; not any vendor's price). Running cost a day is 1/2000.
+  const PRICE = { litho: 60e6, lithomet: 8e6, dry: 6e6, wet: 4e6, diff: 5e6, diel: 6e6, tf: 7e6, tfmet: 3e6, imp: 9e6, cmp: 5e6, defmet: 10e6 };
+
+  /** Dollars spent on tools, spares included. */
+  function spend(s) {
+    let d = 0;
+    const spared = new Set(); // a group's spares are the group's, counted once however many places it stands in
+    for (const b of s.blocks) {
+      if (b.kind !== "group" || !PRICE[b.area]) continue;
+      d += b.count * PRICE[b.area];
+      if (b.rec && b.rec.kind === "swap_to_spare" && !spared.has(b.group)) { spared.add(b.group); d += (b.rec.spares || 0) * PRICE[b.area]; }
+    }
+    return d;
+  }
+
+  /** The selection widget's failures and recoveries as an overrides file (docs/OVERRIDES.md); null when none is set. */
+  function overridesFor(s) {
+    const groups = {}, rails = {};
+    for (const b of s.blocks) {
+      if (b.kind !== "group" || !(b.fail || b.rec)) continue;
+      groups[b.group] = {};
+      if (b.fail) groups[b.group].breakdowns = b.fail;
+      if (b.rec) groups[b.group].recovery = b.rec;
+    }
+    for (const k of Object.keys(s.rail)) {
+      const v = s.rail[k];
+      if (!v.fail) continue;
+      const [x, y] = k.split(",").map(Number);
+      v.o.forEach((on, d) => {
+        const nx = x + D[d][0], ny = y + D[d][1];
+        if (on && s.rail[key(nx, ny)]) rails[`${nodeId(x, y)}>${nodeId(nx, ny)}`] = { breakdowns: v.fail, recovery: v.rec || { kind: "wait" } };
+      });
+    }
+    if (!Object.keys(groups).length && !Object.keys(rails).length) return null;
+    const ov = { "fabgym-overrides": 1 };
+    if (Object.keys(groups).length) ov.groups = groups;
+    if (Object.keys(rails).length) ov.rails = rails;
+    return ov;
+  }
+
+  /** Does a run's score meet a challenge's target, having spent `extra` dollars on top? */
+  function meets(score, target, extra) {
+    if (!score || !(score.wafers_per_day >= target.wafers)) return false;
+    if (target.jams != null && score.jams > target.jams) return false;
+    if (target.budget != null && extra > target.budget) return false;
+    return true;
+  }
+
+  /** Where each vehicle is at `t` in a replay window: stays are [vehicle, from, to, t_in, t_out|null, loaded, hot]. */
+  function vehicleAt(stays, t) {
+    const out = [];
+    for (const [vehicle, from, to, tin, tout, loaded, hot] of stays) {
+      if (t < tin || (tout != null && t >= tout)) continue;
+      const a = cellOfNode(from), b = cellOfNode(to);
+      if (!a || !b) continue;
+      const f = tout == null || tout <= tin ? 0 : (t - tin) / (tout - tin);
+      out.push({ vehicle, x: a[0] + (b[0] - a[0]) * f, y: a[1] + (b[1] - a[1]) * f, loaded, hot });
+    }
+    return out;
+  }
+
+  // ---------- the challenges (docs/EDITOR-TAKE-TWO.md), calibrated on the simulator on 31 Oct, two days, seed 1
+  const teach = () => ({ state: template("teaching"), base: TEACHING_SHOP, overrides: null });
+  const groupBlock = (st, g) => st.blocks.find((b) => b.group === g);
+  const withOverrides = (x) => ((x.overrides = overridesFor(x.state)), x);
+  function laneCell(st, x) {
+    const ys = Math.min(...Object.keys(st.rail).filter((k) => st.rail[k].spine).map((k) => Number(k.split(",")[1])));
+    return key(x, ys);
+  }
+  const CHALLENGES = [
+    {
+      id: "rush", title: "Rush hour on the spine", days: 2,
+      // the last stars need a cap on the lots inside (docs/THIRD-STAR.md)
+      tip: "try a cap on the lots inside (click empty floor, then Cap on lots inside). Too low a cap starves the fab.",
+      problem: "A piece of the main track by the lithography bay keeps breaking down, and every car behind it sits and waits.",
+      goal: "Get output up to 670 wafers a day. Hint: click the broken track and set When it stops to Cars go around it; the bay's own loop carries them.",
+      spot: { rail: "fail" }, tools: ["select", "rail", "erase", "entry", "exit", "stocker"],
+      target: { wafers: 670, budget: 0 },
+      setup() { const x = teach(); const v = x.state.rail[laneCell(x.state, 3)]; v.fail = { kind: "random", mttf_minutes: 120, mttr_minutes: 90 }; v.rec = { kind: "wait" }; return withOverrides(x); },
+      fix(x) { x.state.rail[laneCell(x.state, 3)].rec = { kind: "route_around" }; return withOverrides(x); },
+    },
+    {
+      id: "polisher", title: "The gassed polisher", days: 2,
+      tip: "try a cap on the lots inside (click empty floor, then Cap on lots inside). Too low a cap starves the fab.",
+      problem: "The whole fab shares one polishing machine. It cannot keep up, and work piles up in front of it.",
+      goal: "Get output up to 780 wafers a day. You can afford one more polishing machine.",
+      spot: { group: "Planar_T" }, tools: ["select"],
+      target: { wafers: 780, budget: PRICE.cmp },
+      setup() { const x = teach(); groupBlock(x.state, "Planar_T").count = 1; return x; },
+      fix(x) { groupBlock(x.state, "Planar_T").count = 2; return x; },
+    },
+    {
+      id: "breakdown", title: "Breakdown, no spare", days: 2,
+      problem: "The lithography machines break every few hours, and each repair takes three hours on the spot.",
+      goal: "Get output up to 550 wafers a day. You can afford one more lithography machine, or one spare to swap in.",
+      spot: { group: "Litho_T" }, tools: ["select"],
+      target: { wafers: 550, budget: PRICE.litho },
+      setup() { const x = teach(); const b = groupBlock(x.state, "Litho_T"); b.fail = { kind: "random", mttf_minutes: 240, mttr_minutes: 180 }; return withOverrides(x); },
+      fix(x) { groupBlock(x.state, "Litho_T").rec = { kind: "swap_to_spare", spares: 1, swap_minutes: 20 }; return withOverrides(x); },
+    },
+    {
+      id: "lean", title: "Lean or redundant?", days: 2,
+      tip: "try a cap on the lots inside (click empty floor, then Cap on lots inside). Too low a cap starves the fab.",
+      problem: "On day two the polishing machines are down for ten hours. Do you keep the fab lean, or pay for a backup?",
+      goal: "Keep output at 650 wafers a day through the outage. You can afford one more polishing machine.",
+      spot: { group: "Planar_T" }, tools: ["select"],
+      target: { wafers: 650, budget: PRICE.cmp },
+      setup() { const x = teach(); x.base = TEACHING_SHOP.replace(/(group\tPlanar_T\t\d+\t[^\n]*)/, "$1\ndown\t1800.0\t2400.0"); return x; },
+      fix(x) { groupBlock(x.state, "Planar_T").count = 3; return x; },
+    },
+  ];
+
+  // ---------- room to draw, and stars (docs/EDITOR-ROOM.md)
+  const ROOM_MAX = 120; // tiles a side, 360 m
+  /** The floor's size once grown to take a w x h piece at (x, y), and how far everything moves; null past the limit. */
+  function roomFor(st, x, y, w, h) {
+    const dx = Math.max(0, -x), dy = Math.max(0, -y);
+    const W = Math.max(st.W + dx, x + dx + w), H = Math.max(st.H + dy, y + dy + h);
+    return W > ROOM_MAX || H > ROOM_MAX ? null : { dx, dy, W, H };
+  }
+  /** Grows the floor (in place) to take the piece: past the left or top edge everything moves over. Returns [dx, dy]. */
+  function grow(st, x, y, w = 1, h = 1) {
+    const r = roomFor(st, x, y, w, h);
+    if (!r) return null;
+    if (r.dx || r.dy) {
+      for (const b of st.blocks) { b.x += r.dx; b.y += r.dy; }
+      const rail = {};
+      for (const k of Object.keys(st.rail)) { const [a, c] = k.split(",").map(Number); rail[key(a + r.dx, c + r.dy)] = st.rail[k]; }
+      st.rail = rail;
+    }
+    st.W = r.W; st.H = r.H;
+    return [r.dx, r.dy];
+  }
+  /** Stars for a run: met 1, 2% over the target 2, 5% over 3; none unless every limit holds. */
+  function stars(score, target, extra) {
+    if (!meets(score, target, extra)) return 0;
+    const r = score.wafers_per_day / target.wafers;
+    return r >= 1.05 ? 3 : r >= 1.02 ? 2 : 1;
+  }
+
+  // ---------- the editor as a game (docs/EDITOR-GAME.md)
+  const TROUBLE = { broken: "#FF4D4F", gassed: "#FFB020", blocked: "#FFB020", held: "#FFB020", line: "#FFB020", planned: "#5FA8FF" };
+  const LINE_AT = 4; // lots waiting that make a line worth a badge
+  /** A machine's trouble, or null: badges only for trouble. A line beats a planned stop. */
+  function trouble(mood, q) {
+    let kind = null;
+    if (mood === "hurt" || mood === "physio") kind = "broken";
+    else if (mood === "tired") kind = "gassed";
+    else if (mood === "full") kind = "blocked";
+    else if (mood === "hold") kind = "held";
+    else if ((q || 0) >= LINE_AT) kind = "line";
+    else if (mood === "pm" || mood === "setup") kind = "planned";
+    return kind ? { kind, color: TROUBLE[kind] } : null;
+  }
+  /** Lots waiting as pods: rows of six, up to three rows; past eighteen, seventeen and a mark for more. */
+  const pile = (q) => (q > 18 ? { shown: 17, more: true } : { shown: Math.max(0, q | 0), more: false });
+  /** How a piece of track is drawn from its jam (extra minutes a car waits on it). */
+  const jamStyle = (j) => (j > 1 ? { kind: "red", width: 2 } : j > 0.2 ? { kind: "amber", width: 1.5 } : { kind: "calm", width: 1 });
+  /** One line of advice from the hour on screen. */
+  function advise({ brokenJam, worst, met, stars, tip }) {
+    // met with one or two stars: name them and give the challenge's tip for the next (docs/THIRD-STAR.md)
+    if (met && stars === 3 && tip) return "Three stars. Try another challenge.";
+    if (met && (stars === 1 || stars === 2) && tip) return `${stars === 1 ? "One star" : "Two stars"}. For the next star, ${tip}`;
+    if (met) return "Challenge met. Try another one, or push the number higher.";
+    if (brokenJam) return "Cars are queuing behind the broken track. Give them a way around the break.";
+    if (worst && worst.queue >= LINE_AT) return `The longest line is at ${worst.name}: ${worst.queue} lots waiting.`;
+    return "Lots are flowing. Watch for a line to build.";
+  }
+  /** The text that floats up where you changed something. */
+  function floatText(prev, now) {
+    if (prev == null || now == null) return null;
+    const d = Math.round(now - prev);
+    return d > 0 ? `+${d} wafers a day` : d < 0 ? `\u2212${-d} wafers a day` : "same output";
+  }
+
+  /** A block's mood at a frame: the most common mood among its group's tools; a tie to the more serious. */
+  function blockMood(m, frame, group) {
+    const f = m.frames[frame];
+    const n = {};
+    m.groups.forEach((g, i) => {
+      if (g === group) {
+        const mood = m.tool_moods[f.tools[i]];
+        n[mood] = (n[mood] || 0) + 1;
+      }
+    });
+    const moods = Object.keys(n);
+    if (!moods.length) return null;
+    moods.sort((a, b) => n[b] - n[a] || SERIOUS.indexOf(a) - SERIOUS.indexOf(b));
+    return moods[0];
+  }
+
+  // ---------- the editor's basics (docs/EDITOR-BASICS.md)
+
+  /** Undo and redo. Push the state before each step; undo and redo take the state now and give the one to show.
+   * At most `limit` steps are kept; every state kept is a copy. */
+  function History(limit) {
+    const copy = (x) => JSON.parse(JSON.stringify(x));
+    let back = [], fwd = [];
+    return {
+      push(st) { back.push(copy(st)); if (back.length > limit) back.shift(); fwd = []; },
+      undo(now) { if (!back.length) return null; fwd.push(copy(now)); return back.pop(); },
+      redo(now) { if (!fwd.length) return null; back.push(copy(now)); return fwd.pop(); },
+      canUndo: () => back.length > 0,
+      canRedo: () => fwd.length > 0,
+      clear() { back = []; fwd = []; },
+    };
+  }
+
+  /** Zoom a view ({s, ox, oy}: screen = o + world × s) by `factor` about the screen point (px, py), keeping s within
+   * [lo, hi]; the point under (px, py) stays there. */
+  function zoomAt(v, factor, px, py, lo, hi) {
+    const sc = Math.max(lo, Math.min(hi, v.s * factor)), f = sc / v.s;
+    return { s: sc, ox: px - (px - v.ox) * f, oy: py - (py - v.oy) * f };
+  }
+
+  function panBy(v, dx, dy) {
+    return { s: v.s, ox: v.ox + dx, oy: v.oy + dy };
+  }
+
+  /** Whether a w × h footprint at (x, y) is clear of the floor's edge, track and other blocks (`skipId` may stay). */
+  function isFree(st, x, y, w, h, skipId, canGrow) {
+    if (canGrow) { if (!roomFor(st, x, y, w, h)) return { ok: false, why: "That is as far as the floor goes." }; }
+    else if (x < 0 || y < 0 || x + w > st.W || y + h > st.H) return { ok: false, why: "Off the edge of the floor." };
+    for (let i = 0; i < w; i++) {
+      for (let j = 0; j < h; j++) {
+        if (st.rail[key(x + i, y + j)]) return { ok: false, why: "Track is in the way." };
+        const b = st.blocks.find((z) => z.id !== skipId && x + i >= z.x && x + i < z.x + z.w && y + j >= z.y && y + j < z.y + z.h);
+        if (b) return { ok: false, why: b.kind === "group" ? "A machine is in the way." : "Something is in the way." };
+      }
+    }
+    return { ok: true, why: "" };
+  }
+
+  /** A block's footprint in tiles: wafers in and out are 1 × 2, the rest 2 × 2. */
+  const footprint = (kind) => (kind === "entry" || kind === "exit" ? [1, 2] : [2, 2]);
+
+  /** The ghost of a block about to be placed at (x, y): its footprint and whether it fits. */
+  function ghost(st, kind, x, y) {
+    const [w, h] = footprint(kind), f = isFree(st, x, y, w, h);
+    return { kind, x, y, w, h, ok: f.ok, why: f.why };
+  }
+
+  // ---------- the editor's foreman keys (docs/EDITOR-MOVES.md)
+
+  /** R: wafers in and out turn between 1 × 2 and 2 × 1; a square piece looks and works the same turned. */
+  function turn(kind, w, h) {
+    return kind === "entry" || kind === "exit" ? { w: h, h: w, changed: w !== h } : { w, h, changed: false };
+  }
+
+  /** Q: the tool for what is at (x, y): a machine's kind, storage or wafers in or out, the Track tool, or Select. */
+  function pickAt(st, x, y) {
+    const b = st.blocks.find((z) => x >= z.x && x < z.x + z.w && y >= z.y && y < z.y + z.h);
+    if (b) return b.kind === "group" ? b.area : b.kind;
+    return st.rail[key(x, y)] ? "rail" : "select";
+  }
+
+  /** The pieces (ids) and track (keys) wholly inside the box with corners (x0, y0) and (x1, y1), in any order; with
+   * `crossing`, every piece the box touches (docs/BUILD-CONTROLS.md, part 7). */
+  function inBox(st, x0, y0, x1, y1, crossing) {
+    const ax = Math.min(x0, x1), bx = Math.max(x0, x1), ay = Math.min(y0, y1), by = Math.max(y0, y1);
+    const blocks = st.blocks.filter((b) => (crossing ? b.x <= bx && b.x + b.w - 1 >= ax && b.y <= by && b.y + b.h - 1 >= ay
+      : b.x >= ax && b.y >= ay && b.x + b.w - 1 <= bx && b.y + b.h - 1 <= by)).map((b) => b.id);
+    const rails = Object.keys(st.rail).filter((k) => { const [x, y] = k.split(",").map(Number); return x >= ax && x <= bx && y >= ay && y <= by; });
+    return { blocks, rails };
+  }
+
+  /** A copy of a selection, each piece placed relative to the selection's top corner; null when nothing is selected. */
+  function copySel(st, sel) {
+    const bs = st.blocks.filter((b) => sel.blocks.includes(b.id));
+    const rs = sel.rails.filter((k) => st.rail[k]).map((k) => [...k.split(",").map(Number), st.rail[k]]);
+    if (!bs.length && !rs.length) return null;
+    const ox = Math.min(...bs.map((b) => b.x), ...rs.map((r) => r[0])), oy = Math.min(...bs.map((b) => b.y), ...rs.map((r) => r[1]));
+    const blocks = bs.map((b) => ({ kind: b.kind, area: b.area, group: b.group, count: b.count, w: b.w, h: b.h, dx: b.x - ox, dy: b.y - oy }));
+    const rails = rs.map(([x, y, v]) => ({ dx: x - ox, dy: y - oy, o: v.o.slice() }));
+    const w = Math.max(...blocks.map((b) => b.dx + b.w), ...rails.map((r) => r.dx + 1));
+    const h = Math.max(...blocks.map((b) => b.dy + b.h), ...rails.map((r) => r.dy + 1));
+    return { blocks, rails, w, h };
+  }
+
+  /** A copy placed with its corner at (x, y), without changing the floor: the new pieces and track, whether all of it
+   * fits (and why not), and the machines left out. A copied machine takes the next of `available[area]` (unplaced
+   * groups of its kind). */
+  function pasteAt(st, clip, x, y, available, known) {
+    // the groups this fab knows (a blueprint may come from another fab, part 8); none given means any
+    const knows = (g) => !known || (known instanceof Set ? known.has(g) : known.includes(g));
+    const avail = {};
+    for (const a of Object.keys(available || {})) avail[a] = available[a].slice();
+    const blocks = [], rails = {}, skipped = [];
+    let ok = true, why = "";
+    for (const c of clip.blocks) {
+      const b = { kind: c.kind, x: x + c.dx, y: y + c.dy, w: c.w, h: c.h };
+      if (c.kind === "group") {
+        // an unplaced group of its kind first; else more machines of its own group, in a new place (part 7)
+        const g = (avail[c.area] || []).shift() || (c.group && knows(c.group) ? c.group : null);
+        if (!g) { skipped.push(c.group && !knows(c.group) ? `${c.group} is not in this fab and no unplaced ${c.area} group is left, so it was left out.` : `No unplaced ${c.area} group is left, so one machine was left out.`); continue; }
+        Object.assign(b, { area: c.area, group: g, count: c.count });
+      }
+      const f = isFree(st, b.x, b.y, b.w, b.h);
+      if (!f.ok && ok) { ok = false; why = f.why; }
+      blocks.push(b);
+    }
+    for (const r of clip.rails) {
+      const rx = x + r.dx, ry = y + r.dy;
+      const f = isFree(st, rx, ry, 1, 1);
+      if (!f.ok && ok) { ok = false; why = f.why; }
+      rails[key(rx, ry)] = { o: r.o.slice() };
+    }
+    return { ok, why, blocks, rails, skipped };
+  }
+
+  // ---------- acting on a selection (docs/BUILD-CONTROLS.md, part 7); each returns a new floor, the old one unchanged
+  const cloneSt = (st) => JSON.parse(JSON.stringify(st));
+  /** The track joined to the piece at `k`, following directions either way. */
+  function connectedRail(st, k0) {
+    if (!st.rail[k0]) return [];
+    const seen = new Set([k0]), todo = [k0];
+    while (todo.length) {
+      const k = todo.pop(), [x, y] = k.split(",").map(Number);
+      for (let d = 0; d < 4; d++) {
+        const nk = key(x + D[d][0], y + D[d][1]);
+        if (seen.has(nk) || !st.rail[nk]) continue;
+        if (st.rail[k].o[d] || st.rail[nk].o[(d + 2) % 4]) { seen.add(nk); todo.push(nk); }
+      }
+    }
+    return [...seen];
+  }
+  /** Put the selection's pieces where `blocks` ({id, x, y, w, h}) and `rails` ({key: piece}) say, if all of it fits. */
+  function placeSel(st, sel, blocks, rails) {
+    const ids = new Set(sel.blocks), rest = cloneSt(st);
+    rest.blocks = rest.blocks.filter((b) => !ids.has(b.id));
+    for (const k of sel.rails) delete rest.rail[k];
+    for (const b of blocks) { const f = isFree(rest, b.x, b.y, b.w, b.h); if (!f.ok) return { ok: false, why: f.why }; }
+    for (const k of Object.keys(rails)) { const [x, y] = k.split(",").map(Number), f = isFree(rest, x, y, 1, 1); if (!f.ok) return { ok: false, why: f.why }; }
+    const out = cloneSt(st);
+    out.blocks = out.blocks.map((b) => { const n = blocks.find((z) => z.id === b.id); return n ? { ...b, x: n.x, y: n.y, w: n.w, h: n.h } : b; });
+    for (const k of sel.rails) delete out.rail[k];
+    Object.assign(out.rail, cloneSt(rails));
+    return { ok: true, why: "", state: out, sel: { blocks: sel.blocks.slice(), rails: Object.keys(rails) } };
+  }
+  const selPieces = (st, sel) => ({ bs: st.blocks.filter((b) => sel.blocks.includes(b.id)), rs: sel.rails.filter((k) => st.rail[k]).map((k) => [...k.split(",").map(Number), st.rail[k]]) });
+  /** The selection moved by (dx, dy). */
+  function moveSel(st, sel, dx, dy) {
+    const { bs, rs } = selPieces(st, sel), rails = {};
+    for (const [x, y, v] of rs) rails[key(x + dx, y + dy)] = v;
+    return placeSel(st, sel, bs.map((b) => ({ id: b.id, x: b.x + dx, y: b.y + dy, w: b.w, h: b.h })), rails);
+  }
+  /** The selection turned a quarter clockwise in its box, or with `mirror` flipped left to right; the box keeps its
+   * top-left corner, and track directions turn with it. */
+  function turnSel(st, sel, mirror) {
+    const { bs, rs } = selPieces(st, sel);
+    if (!bs.length && !rs.length) return { ok: true, why: "", state: cloneSt(st), sel: { blocks: [], rails: [] } };
+    const xs = [...bs.flatMap((b) => [b.x, b.x + b.w - 1]), ...rs.map((r) => r[0])], ys = [...bs.flatMap((b) => [b.y, b.y + b.h - 1]), ...rs.map((r) => r[1])];
+    const x0 = Math.min(...xs), y0 = Math.min(...ys), W = Math.max(...xs) - x0 + 1, H = Math.max(...ys) - y0 + 1;
+    const blocks = bs.map((b) => {
+      const rx = b.x - x0, ry = b.y - y0;
+      return mirror ? { id: b.id, x: x0 + W - (rx + b.w), y: b.y, w: b.w, h: b.h } : { id: b.id, x: x0 + H - (ry + b.h), y: y0 + rx, w: b.h, h: b.w };
+    });
+    const rails = {};
+    for (const [x, y, v] of rs) {
+      const rx = x - x0, ry = y - y0, o = v.o;
+      if (mirror) rails[key(x0 + W - 1 - rx, y)] = { ...v, o: [o[2], o[1], o[0], o[3]] };
+      else rails[key(x0 + H - 1 - ry, y0 + rx)] = { ...v, o: [o[3], o[0], o[1], o[2]] };
+    }
+    return placeSel(st, sel, blocks, rails);
+  }
+  /** The floor with the selection deleted: "all", only "track", only "machines", or only storage and doors ("infra"). */
+  function deleteSel(st, sel, only) {
+    const out = cloneSt(st), ids = new Set(sel.blocks), what = only || "all";
+    out.blocks = out.blocks.filter((b) => !(ids.has(b.id) && (what === "all" || (what === "machines" && b.kind === "group") || (what === "infra" && b.kind !== "group"))));
+    if (what === "all" || what === "track") for (const k of sel.rails) delete out.rail[k];
+    return out;
+  }
+
+  // ---------- editing that knows it is a fab (docs/BUILD-CONTROLS.md, part 8)
+  const cellsOf = (kk) => kk.split(",").map(Number);
+  const covered = (st, x, y) => st.blocks.some((z) => x >= z.x && x < z.x + z.w && y >= z.y && y < z.y + z.h);
+  /** The shortest way over free floor from `from` (a key or keys: track or free floor) to `to` (a key or keys), laid
+   * as one-way track from start to end and joined to the track at both ends; `avoid` keys are never crossed. The way
+   * may run up to 4 tiles past the floor's edges, and the floor grows to take it (`shift` says how far everything moved);
+   * with `opts.grow` false it stays on the floor. */
+  const ROUTE_MARGIN = 4;
+  function route(st, from, to, avoid, opts) {
+    const starts = [].concat(from), bad = new Set(avoid || []), m = opts && opts.grow === false ? 0 : ROUTE_MARGIN;
+    const inside = (x, y) => x >= -m && y >= -m && x < st.W + m && y < st.H + m;
+    const open = (kk) => { const [x, y] = cellsOf(kk); return inside(x, y) && !st.rail[kk] && !bad.has(kk) && !covered(st, x, y); };
+    const goals = new Set([].concat(to).filter((kk) => st.rail[kk] || open(kk)));
+    const prev = new Map(), q = [];
+    for (const s0 of starts) { const [x, y] = cellsOf(s0); if (!prev.has(s0) && inside(x, y) && !covered(st, x, y)) { prev.set(s0, null); q.push(s0); } }
+    if (!q.length) return { ok: false, why: "A route starts on track or on empty floor." };
+    let end = null;
+    for (let i = 0; i < q.length && !end; i++) {
+      const c = q[i], [x, y] = cellsOf(c);
+      for (let d = 0; d < 4 && !end; d++) {
+        const nk = key(x + D[d][0], y + D[d][1]);
+        if (prev.has(nk)) continue;
+        if (goals.has(nk)) { prev.set(nk, c); end = nk; }
+        else if (open(nk)) { prev.set(nk, c); q.push(nk); }
+      }
+    }
+    if (!end) return { ok: false, why: "There is no free way between them: machines or track block every way." };
+    let path = [];
+    for (let c = end; c != null; c = prev.get(c)) path.unshift(c);
+    const out = cloneSt(st);
+    // past the edge: the floor grows to take the way, everything moving over when it grows left or up
+    const pxs = path.map((c) => cellsOf(c)[0]), pys = path.map((c) => cellsOf(c)[1]);
+    const x0 = Math.min(...pxs), y0 = Math.min(...pys), x1 = Math.max(...pxs), y1 = Math.max(...pys);
+    let shift = [0, 0];
+    if (x0 < 0 || y0 < 0 || x1 >= st.W || y1 >= st.H) {
+      shift = grow(out, x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+      if (!shift) return { ok: false, why: "That is as far as the floor goes." };
+      path = path.map((c) => { const [x, y] = cellsOf(c); return key(x + shift[0], y + shift[1]); });
+    }
+    for (let i = 0; i < path.length; i++) {
+      out.rail[path[i]] = out.rail[path[i]] || { o: [0, 0, 0, 0] };
+      if (i + 1 < path.length) {
+        const [x, y] = cellsOf(path[i]), [nx, ny] = cellsOf(path[i + 1]);
+        out.rail[path[i]].o[D.findIndex(([dx, dy]) => x + dx === nx && y + dy === ny)] = 1;
+      }
+    }
+    return { ok: true, why: "", state: out, path, shift };
+  }
+  /** A cut of track (keys) out of `st`: the cut tiles, the pieces left that led into it, and the pieces it led to. */
+  function cutGaps(st, cells) {
+    const cut = new Set(cells), preds = new Set(), succs = new Set();
+    for (const kk of Object.keys(st.rail)) {
+      const [x, y] = cellsOf(kk);
+      st.rail[kk].o.forEach((on, d) => {
+        if (!on) return;
+        const nk = key(x + D[d][0], y + D[d][1]);
+        if (!st.rail[nk]) return;
+        if (!cut.has(kk) && cut.has(nk)) preds.add(kk);
+        if (cut.has(kk) && !cut.has(nk)) succs.add(nk);
+      });
+    }
+    return { cells: [...cut].sort(), preds: [...preds].sort(), succs: [...succs].sort() };
+  }
+  /** Each piece that led into a cut, routed around the cut tiles to the nearest piece the cut led to. */
+  function heal(st, gaps) {
+    let cur = cloneSt(st);
+    const paths = [], cut = new Set(gaps.cells);
+    for (const p of gaps.preds) {
+      if (!cur.rail[p]) continue;
+      const [x, y] = cellsOf(p);
+      cur.rail[p].o = cur.rail[p].o.map((on, d) => (on && cut.has(key(x + D[d][0], y + D[d][1])) ? 0 : on));
+      const targets = gaps.succs.filter((s2) => cur.rail[s2]);
+      if (!targets.length) return { ok: false, why: "Nothing is left after the cut to reconnect to." };
+      const r = route(cur, p, targets, gaps.cells, { grow: false }); // on the floor, so the cut's tiles keep their names
+      if (!r.ok) return { ok: false, why: r.why };
+      cur = r.state; paths.push(r.path);
+    }
+    return { ok: true, why: "", state: cur, paths };
+  }
+  /** Does list `a` sort before list `b`, field by field? */
+  const before = (a, b) => { for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] < b[i]; return false; };
+  /** A free spot for a w × h piece near (x, y) that touches the track: (x, y) itself if it does, else the nearest within
+   * `radius` tiles; null when there is none. */
+  function snapBeside(st, x, y, w, h, radius) {
+    const r = radius == null ? 3 : radius, fits = (nx, ny) => isFree(st, nx, ny, w, h).ok && beside(st, { x: nx, y: ny, w, h }).length > 0;
+    if (fits(x, y)) return [x, y];
+    let best = null, bk = null;
+    for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+      const nx = x + dx, ny = y + dy;
+      if (!fits(nx, ny)) continue;
+      const kk = [Math.max(Math.abs(dx), Math.abs(dy)), Math.abs(dx) + Math.abs(dy), ny, nx];
+      if (!bk || before(kk, bk)) { best = [nx, ny]; bk = kk; } // nearest by steps, then by distance, then top, then left
+    }
+    return best;
+  }
+  /** The track the entry reaches, and the track from which an exit can be reached, along the track's directions. */
+  function reach(st) {
+    const nodes = (kind) => st.blocks.filter((b) => b.kind === kind).map((b) => beside(st, b)[0]).filter(Boolean).map(([x, y]) => key(x, y));
+    const next = (kk) => { const [x, y] = cellsOf(kk); return st.rail[kk].o.map((on, d) => (on ? key(x + D[d][0], y + D[d][1]) : null)).filter((n) => n && st.rail[n]); };
+    const back = {};
+    for (const kk of Object.keys(st.rail)) for (const n of next(kk)) (back[n] = back[n] || []).push(kk);
+    const walk = (seed, step) => { const seen = new Set(seed), todo = [...seed]; while (todo.length) for (const n of step(todo.pop())) if (!seen.has(n)) { seen.add(n); todo.push(n); } return [...seen]; };
+    return { fromEntry: walk(nodes("entry"), next), toExit: walk(nodes("exit"), (kk) => back[kk] || []) };
+  }
+  /** Every other machine group (`scope` "all") or every group of the same kind ("kind") given this group's breakdowns
+   * and what happens when it breaks. */
+  function sameForKind(st, group, scope) {
+    const out = cloneSt(st), src = out.blocks.find((b) => b.kind === "group" && b.group === group);
+    if (!src) return out;
+    for (const b of out.blocks) {
+      if (b.kind !== "group" || b.group === group || (scope !== "all" && b.area !== src.area)) continue;
+      for (const f of ["fail", "rec"]) { if (src[f] == null) delete b[f]; else b[f] = cloneSt(src[f]); }
+    }
+    return out;
+  }
+
+  /** The 1–9 hotbar: Select, Track, Erase, then the six most recent pieces (most recent first), filled in a fixed order. */
+  function hotbar(recent) {
+    const out = ["select", "rail", "erase"];
+    for (const t of [...(recent || []), "stocker", "entry", "exit", ...AREAS]) {
+      if (out.length >= 9) break;
+      if (!out.includes(t)) out.push(t);
+    }
+    return out;
+  }
+
+  /** An icon engraved into a tile of colour `c` (docs/EDITOR-TOPDOWN.md): the cut, a dark shade of the tile, and a
+   * see-through white line along its lower edge. */
+  function engrave(c) {
+    const n = parseInt(String(c).replace("#", ""), 16), k = 0.38;
+    return { cut: `rgb(${Math.round((n >> 16) * k)},${Math.round(((n >> 8) & 255) * k)},${Math.round((n & 255) * k)})`, light: "rgba(255,255,255,0.35)" };
+  }
+
+  const api = { TILE_M, AREAS, AREA_OF, TEACHING_SHOP, PRICE, CHALLENGES, template, toPlan, fabText, flowOptions, flowKind, flowWords, applyFlow, blockMood, cellOfNode, beside, key, spend, overridesFor, meets, vehicleAt,
+    History, zoomAt, panBy, isFree, footprint, ghost, turn, pickAt, inBox, copySel, pasteAt, hotbar, engrave, connectedRail, moveSel, turnSel, deleteSel, route, cutGaps, heal, snapBeside, reach, sameForKind,
+    trouble, pile, jamStyle, advise, floatText, grow, roomFor, stars, ROOM_MAX };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.FabEditor = api;
+})(typeof window !== "undefined" ? window : globalThis);

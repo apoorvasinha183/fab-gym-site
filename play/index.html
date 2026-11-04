@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fab Gym Floor</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230F1D22' stroke='%237EE8D8' stroke-width='2'/%3E%3Cpath d='M8 12h16M8 16h16M8 20h16M12 8v16M16 8v16M20 8v16' stroke='%237EE8D8' stroke-width='1' opacity='.6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="floor-ui.css">
+</head>
+<body class="opening-on">
+<canvas id="floor" aria-label="The fab floor: halls of tools around a spine belt"></canvas>
+
+<header class="card brand">
+  <div class="brand-row"><div class="title">Fab Gym</div>
+    <nav class="topnav" aria-label="Pages"><a href="#home" data-page="home">Desk</a><a href="#floor" data-page="floor">Floor</a><a href="editor.html" data-page="build">Build</a><a href="#evidence" data-page="evidence">Evidence</a><a href="runs.html">Runs</a></nav></div>
+  <div class="sub"><span class="sub-floor">The full fab, 1,043 machines, running live in your browser</span><span class="sub-ev">What the simulator found, and every run behind it</span></div>
+  <div class="help-row"><button id="stages-open" class="link stages-open" type="button" aria-haspopup="dialog" aria-controls="stages">How a chip is made</button><button id="glossary-open" class="link help-link" type="button" data-tab="glossary" aria-label="Glossary: what the words mean">? Glossary</button></div>
+</header>
+
+<div id="topbar" class="topbar">
+<form id="cmd" class="cmd" role="search" autocomplete="off">
+  <span class="cmd-ic" aria-hidden="true">✦</span>
+  <label for="cmd-q" class="sr">Ask Lou anything about the fab</label>
+  <input id="cmd-q" type="text" placeholder="Ask Lou anything about the fab…" aria-controls="cmd-examples">
+  <kbd>⌘K</kbd>
+  <div id="cmd-examples" class="cmd-examples" aria-label="Example questions: pick one to put it in the bar" hidden></div>
+  <div id="bar-card" class="bar-card" role="status" aria-live="polite" hidden></div>
+</form>
+<button type="button" id="change-open" class="primary try" data-tab="change">⚙︎ Simulation settings</button>
+</div>
+<div id="maptools" class="maptools card" role="group" aria-label="Map view">
+  <button type="button" id="zoom-in" aria-label="Zoom in" title="Zoom in (scroll)">+</button>
+  <button type="button" id="zoom-out" aria-label="Zoom out" title="Zoom out (scroll)">−</button>
+  <button type="button" id="fit-map" aria-label="Fit the whole fab" title="Fit (F)">Fit</button>
+  <button type="button" id="tilt-map" aria-label="Tilt the floor" title="Tilt (T)">Tilt</button>
+</div>
+<div class="lenses" role="group" aria-label="Follow">
+  <span id="watchbar" class="watchbar" role="status" hidden></span>
+  <button type="button" id="proto-open" hidden>Show prototypes</button>
+</div>
+<div id="lens-note" class="lens-note" aria-live="polite"></div>
+<div id="flow-ctl" class="flow-ctl" hidden>
+  <button type="button" id="flow-play">Pause</button>
+  <button type="button" id="flow-restart">Restart</button>
+  <div class="seg" id="flow-route" role="group" aria-label="Product"><button type="button" data-r="3" class="on">Product 3</button><button type="button" data-r="4">Product 4</button></div>
+</div>
+
+<div id="journey-ctl" class="flow-ctl journey-ctl" hidden>
+  <button type="button" id="follow-lot">Follow one lot, start to finish</button>
+  <button type="button" id="jr-play" hidden>Pause</button>
+  <div class="seg" id="jr-rate" role="group" aria-label="Journey speed" hidden><button type="button" data-k="1">×1</button><button type="button" data-k="4" class="on">×4</button><button type="button" data-k="16">×16</button></div>
+  <label class="jr-step" id="jr-step-l" hidden><span class="sr">Step</span><input id="jr-step" type="range" min="0" max="0" value="0"></label>
+  <span id="jr-label" class="jr-label" aria-live="polite"></span>
+</div>
+
+<section id="health" class="card kpis health" aria-label="Fab status: the fab at this moment">
+  <h2 class="hp-title"><button type="button" id="health-fold" class="fold" aria-expanded="true" aria-controls="health">Fab status <span class="chev" aria-hidden="true">▾</span></button></h2>
+  <div class="hp-sec">
+    <h3>Output</h3>
+    <div class="hp-big"><span class="v" id="h-done">0</span><span class="u">lots finished</span></div>
+    <div class="row"><span class="nm" id="h-wafers-l">wafers out</span><span class="n" id="h-wafers">0</span></div>
+    <div class="row"><span class="nm" id="h-24-l">lots finished in the last 24 h</span><span class="n" id="h-24">0</span></div>
+  </div>
+  <div class="hp-sec">
+    <h3>Lots in the fab</h3>
+    <div class="hp-big"><span class="v" id="h-wip">0</span><span class="u">released, not finished</span></div>
+    <div class="hp-bar" id="h-lotbar" aria-hidden="true"></div>
+    <div class="row spot" data-spot="waiting" role="button" tabindex="0" title="Light the groups with lots waiting"><span class="nm"><i class="sq lw"></i>waiting for a tool</span><span class="n"><span class="dl" id="h-wait-d" hidden></span><span id="h-wait">0</span></span></div>
+    <div class="row"><span class="nm"><i class="sq lp"></i>being processed</span><span class="n" id="h-proc">0</span></div>
+    <div class="row"><span class="nm"><i class="sq lm"></i>moving between tools</span><span class="n" id="h-move">0</span></div>
+    <div class="row"><span class="nm"><i class="sq lr"></i>resting in storage</span><span class="n" id="h-rest">0</span></div>
+    <div class="row"><span class="nm">wait for a tool, last hour</span><span class="n"><span class="dl" id="h-wh-d" hidden></span><span id="h-wh">–</span></span></div>
+    <div class="hp-act"><button type="button" id="follow-open">Follow one lot</button><span class="hp-note" id="h-ago-note" hidden>▲▼ vs this time yesterday</span></div>
+  </div>
+  <div class="hp-sec">
+    <h3>Tools <span class="hp-of" id="h-nt"></span></h3>
+    <div class="hp-bar" id="h-toolbar" aria-hidden="true"></div>
+    <div class="row spot" data-spot="s0" role="button" tabindex="0" title="Light the machines working"><span class="nm"><i class="sq s0"></i>working</span><span class="n" id="h-t0">0</span></div>
+    <div class="row spot" data-spot="s1" role="button" tabindex="0" title="Light the machines idle"><span class="nm"><i class="sq s1"></i>idle</span><span class="n" id="h-t1">0</span></div>
+    <div class="row spot" data-spot="s4" role="button" tabindex="0" title="Light the machines changing setup"><span class="nm"><i class="sq s4"></i>changing setup</span><span class="n" id="h-t4">0</span></div>
+    <div class="row spot" data-spot="s2" role="button" tabindex="0" title="Light the machines in maintenance"><span class="nm"><i class="sq s2"></i>in maintenance</span><span class="n" id="h-t2">0</span></div>
+    <div class="row spot" data-spot="s3" role="button" tabindex="0" title="Light the machines broken down"><span class="nm"><i class="sq s3"></i>broken down</span><span class="n" id="h-t3">0</span></div>
+    <div class="hp-pair"><div><span class="v"><span id="h-avail">–</span> <span class="dl" id="h-avail-d" hidden></span></span><span class="u">available</span></div><div><span class="v" id="h-busy">–</span><span class="u">of available working</span></div></div>
+  </div>
+  <div class="hp-sec">
+    <h3>Longest queue</h3>
+    <div class="row spot" data-spot="longest" role="button" tabindex="0" title="Fly to this group"><span class="nm"><span id="h-lq-name">–</span> <span class="loc" aria-hidden="true">⌖</span></span><span class="n" id="h-lq">0</span></div>
+  </div>
+  <div class="hp-sec">
+    <h3>Latest events</h3>
+    <ol id="ticker" class="ticker" aria-label="Floor log"></ol>
+  </div>
+</section>
+
+
+<aside id="dock" class="card dock" aria-label="Panels" hidden>
+  <div class="dock-head">
+    <h2 id="dock-title" class="dock-title"></h2>
+    <button type="button" class="icon close" id="dock-close" aria-label="Close the panel">✕</button>
+  </div>
+  <div class="dock-body" id="dock-body">
+  <nav class="ev-toc" aria-label="Evidence"><button type="button" data-jump="findings">What we found</button><button type="button" data-jump="numbers">Lab notebook</button><button type="button" data-jump="results">Runs</button></nav>
+  <section id="pane-ask" class="pane" role="tabpanel" aria-label="Ask" hidden>
+    <h2>Ask the fab</h2>
+    <p class="pane-lead">Type a question in the bar at the top (⌘K), or pick one below.</p>
+    <div id="ask-examples" class="chips" aria-label="Example questions"></div>
+    <p class="note" id="ask-model">Connecting to the helper…</p>
+    <div id="ask-live" aria-live="polite">
+      <p id="ask-run" class="ask-run" hidden><a></a></p>
+      <p id="ask-stage" class="stage" hidden></p>
+      <div id="ask-scenario" hidden></div>
+      <div id="ask-result"></div>
+    </div>
+    <details id="ask-edit" class="advanced">
+      <summary>Advanced: write the experiment yourself</summary>
+      <label for="ask-text" class="sr">Experiment text</label>
+      <textarea id="ask-text" rows="9" spellcheck="false"></textarea>
+      <button type="button" id="ask-run">Run this experiment</button>
+    </details>
+  </section>
+
+  <section id="pane-change" class="pane" role="tabpanel" aria-label="Simulation settings" hidden>
+    <p class="pane-lead">Change a setting, then run it against today on the same 10 random days.</p>
+    <label class="field">Which lot a free machine picks next
+      <select id="rule">
+        <option value="0">Today's rule: urgent first, then no re-setup, then oldest</option>
+        <option value="1">First come, first served</option>
+        <option value="2">Quickest job first</option>
+      </select>
+    </label>
+    <label class="field">Switch off a machine group
+      <select id="down-group"><option value="-1">None</option></select>
+    </label>
+    <div class="row">
+      <label class="field">From hour <input id="down-at" type="number" min="0" max="72" value="6" disabled></label>
+      <label class="field">For hours <input id="down-hours" type="number" min="1" max="72" value="8" disabled></label>
+    </div>
+    <h3>Turn the dials <button id="reset" class="link" type="button">Reset</button></h3>
+    <div class="dials">
+      <div class="dial"><label for="d-breakdowns">Breakdowns <output id="o-breakdowns">×1</output></label><input id="d-breakdowns" type="range" min="0" max="3" step="0.25" value="1"><p class="help">How often machines break. ×2 means twice as often, and 0 means never.</p></div>
+      <div class="dial"><label for="d-repair">Repair time <output id="o-repair">×1</output></label><input id="d-repair" type="range" min="0.5" max="3" step="0.25" value="1"><p class="help">How long a broken machine takes to fix.</p></div>
+      <div class="dial"><label for="d-demand">Demand <output id="o-demand">×1</output></label><input id="d-demand" type="range" min="0.5" max="1.5" step="0.05" value="1"><p class="help">How many new lots start each day.</p></div>
+      <div class="dial"><label for="d-hot">Urgent lots <output id="o-hot">×1</output></label><input id="d-hot" type="range" min="0" max="5" step="0.5" value="1"><p class="help">How many urgent lots jump the line.</p></div>
+      <div class="dial"><label for="d-rework">Rework <output id="o-rework">×1</output></label><input id="d-rework" type="range" min="0" max="5" step="0.5" value="1"><p class="help">How often an inspection sends a lot back to redo a step.</p></div>
+      <div class="dial"><label for="d-defects">Quality holds <output id="o-defects">off</output></label><input id="d-defects" type="range" min="0" max="2" step="0.5" value="0"><p class="help">When an inspection finds a problem, the machine and its recent lots stop for a check. At ×1 the machine stops for 2 h and the lots for 1 h (our assumption).</p></div>
+      <div class="dial"><label for="d-cap">Cap on lots inside <output id="o-cap">none</output></label><input id="d-cap" type="range" min="1500" max="3600" step="100" value="3600"><p class="help">The most lots allowed in the fab at once. New lots wait at the door.</p></div>
+    </div>
+    <details class="advanced">
+      <summary>Advanced: which random day, and how many days</summary>
+      <div class="row">
+        <label class="field">Run number <input id="seed" type="number" min="0" value="0"></label>
+        <label class="field">Days <input id="days" type="number" min="1" max="14" value="3"></label>
+      </div>
+    </details>
+    <div class="pane-foot">
+      <button id="run" class="primary">Run it and compare with today</button>
+      <p class="note" id="runnote">Loading the simulator…</p>
+    </div>
+    <div class="change-result" aria-live="polite">
+      <p class="what" id="cmp-what">Change something above, then run it. You will see how it compares with today's fab on the same days.</p>
+      <div id="cmp-rows"></div>
+      <p class="note small" id="cmp-note"></p>
+    </div>
+  </section>
+
+  <section id="findings" class="pane wide findings" aria-label="What we found" hidden>
+    <h2>What we found</h2>
+    <p class="pane-lead">Four things the simulator taught us, in plain words, each with how sure we are. The tables and every run behind them are in the lab notebook below.</p>
+    <div id="find-list" class="find-list"></div>
+  </section>
+
+  <section id="numbers" class="pane wide" role="tabpanel" aria-label="Numbers" hidden>
+    <h2 class="notebook-h">Lab notebook</h2>
+    <p class="pane-lead">The tables and runs behind the findings above, for readers who want the detail.</p>
+    <h3>Prototypes and the main product: what each change is worth</h3>
+    <div class="num-controls">
+      <div class="seg" role="group" aria-label="Measure" id="num-metric">
+        <button type="button" data-m="profit" class="on">Operating profit</button>
+        <button type="button" data-m="a_wafers">Volume wafers</button>
+        <button type="button" data-m="b_cycle">Prototype cycle time</button>
+      </div>
+      <div class="seg" role="group" aria-label="Prototype orders" id="num-share">
+        <span class="seg-l">Prototype orders</span>
+        <button type="button" data-s="1">×1</button><button type="button" data-s="2">×2</button><button type="button" data-s="4" class="on">×4</button><button type="button" data-s="8">×8</button>
+      </div>
+    </div>
+    <div id="num-base" class="num-base"></div>
+    <div id="num-capital" class="num-capital"></div>
+    <div id="num-question"></div>
+    <details class="advanced" id="num-more">
+      <summary>Every change as an interval, and the trend as orders grow</summary>
+      <div class="num-charts">
+        <figure><figcaption id="num-forest-t"></figcaption><svg id="num-forest" role="img"></svg></figure>
+        <figure><figcaption id="num-lines-t"></figcaption><svg id="num-lines" role="img"></svg><div id="num-lines-key" class="key"></div></figure>
+      </div>
+    </details>
+    <details class="advanced" id="num-method">
+      <summary>How this was measured</summary>
+      <p class="lead" id="num-lead"></p>
+      <p class="note small" id="num-note"></p>
+    </details>
+    <section id="long-sec" class="long-sec">
+      <h3 class="q">Does a cap on lots inside cost output?</h3>
+      <p class="what" id="long-lead"></p>
+      <div id="long-grid" class="grid"></div>
+      <p class="finding" id="long-finding"></p>
+      <p class="note small" id="long-note"></p>
+    </section>
+  </section>
+
+  <section id="results" class="pane wide" role="tabpanel" aria-label="Results" hidden>
+    <h2>Results</h2>
+    <p class="pane-lead">Every experiment we have run, newest first. Open one to see the question, how it was set up and what came out.</p>
+    <div class="res-filter">
+      <input id="res-q" type="search" placeholder="Search results…" aria-label="Search results" autocomplete="off">
+      <div class="seg" id="res-kind" role="group" aria-label="Kind">
+        <button type="button" data-k="all" class="on">All</button><button type="button" data-k="sweep">Studies</button><button type="button" data-k="search">Searches</button><button type="button" data-k="training">Training</button><button type="button" data-k="contest">Contests</button><button type="button" data-k="what-if">Your changes</button><button type="button" data-k="question">Your questions</button>
+      </div>
+    </div>
+    <div id="res-list"></div>
+    <p class="note small ev-foot">All of it is simulated on a fab built from the SMT2020 testbed, a public research set of a chip fab's machines, routes and times. No real company's data is used, and every price is made up.</p>
+  </section>
+
+  <section id="glossary" class="pane wide" role="tabpanel" aria-label="Glossary" hidden>
+    <h2>Glossary</h2>
+    <div id="gl-answer" class="gl-answer" aria-live="polite" hidden></div>
+    <div class="gl-wrap">
+      <nav class="gl-side" aria-label="Terms">
+        <input id="gl-search" type="search" placeholder="Search terms…" aria-label="Search terms" autocomplete="off">
+        <div class="seg gl-order" role="group" aria-label="Order"><button type="button" data-o="az" class="on">A to Z</button><button type="button" data-o="topic">By topic</button></div>
+        <div id="gl-index" class="gl-index"></div>
+      </nav>
+      <article id="gl-article" class="gl-article" aria-live="polite"></article>
+    </div>
+  </section>
+  </div>
+</aside>
+<!-- /dock -->
+
+<section id="stages" class="card stages" role="dialog" aria-modal="true" aria-labelledby="stages-title" hidden>
+  <div class="stages-head">
+    <h2 id="stages-title">How a chip is made</h2>
+    <button id="stages-close" class="icon" type="button" aria-label="Close">✕</button>
+  </div>
+  <p class="stages-lead">From sand to a chip in your phone. Pick a step to read what happens. The fab's part is what this page simulates; the steps before and after it are outside the simulator.</p>
+  <div id="stages-journey" class="journey" role="list" aria-label="From sand to chip"></div>
+  <div id="journey-detail" class="journey-detail" aria-live="polite"></div>
+  <h3 class="loop-title" id="loop-title">The loop in the fab: pick a stage, then Show its hall to find it on the floor</h3>
+  <div class="stages-body">
+    <svg id="stages-loop" viewBox="0 0 540 540" role="group" aria-label="The loop of stages around a wafer"></svg>
+    <div id="stages-detail" class="stages-detail">
+      <div id="stages-info" aria-live="polite"></div>
+      <button id="stages-hall" class="primary" type="button">Show its hall</button>
+    </div>
+  </div>
+  <div class="stages-route">
+    <div class="stages-route-head">
+      <h3>The route a lot takes, one square per step</h3>
+      <div class="seg" role="group" aria-label="Product">
+        <button type="button" data-route="0" class="on">Product 3</button>
+        <button type="button" data-route="1">Product 4</button>
+      </div>
+    </div>
+    <div id="stages-strip" class="stages-strip" aria-label="Route steps"></div>
+    <div id="stages-readout" class="note">Hover over a square to see its step.</div>
+  </div>
+  <p class="note small">The drawings are our own simple sketches and are not to scale. The model itself holds only steps, tools and times, with no chemistry. Every count here is from the SMT2020 testbed (Kopp, Hassoun, Kalir, Mönch 2020), a published set of a fab's tool groups, routes and times. No real fab's data is used.</p>
+</section>
+
+<section id="key" class="card key" aria-label="What the marks on the floor mean">
+  <h2 class="hp-title"><button type="button" id="key-fold" class="fold" aria-expanded="true" aria-controls="key">Legend <span class="chev" aria-hidden="true">▾</span></button></h2>
+  <div class="hp-sec">
+    <h3>Areas</h3>
+    <ul class="legend lgbadge lgarea" id="areakey"></ul>
+  </div>
+  <div class="hp-sec">
+    <h3>Tool light</h3>
+    <ul class="legend lg2">
+      <li><i class="sw s0"></i><span class="nm">working</span></li><li><i class="sw s1"></i><span class="nm">idle</span></li>
+      <li><i class="sw s4"></i><span class="nm">changing setup</span></li><li><i class="sw s2"></i><span class="nm">maintenance</span></li>
+      <li><i class="sw s3"></i><span class="nm">broken down</span></li>
+    </ul>
+    <p class="key-note">The light on a tool is its state; the tool's colour is its area.</p>
+  </div>
+  <div class="hp-sec">
+    <h3>Group badge</h3>
+    <p class="key-note">The most common state among a group's tools; a tie goes to the more serious.</p>
+    <ul class="legend lgbadge" id="moodkey"></ul>
+  </div>
+  <div class="hp-sec">
+    <h3>Lots</h3>
+    <ul class="legend lg1">
+      <li><i class="dot"></i><span class="nm">a lot: a box of 25 wafers</span></li>
+      <li><i class="dot hot"></i><span class="nm">an urgent lot</span></li>
+      <li><i class="dot proto"></i><span class="nm">a prototype lot</span></li>
+      <li><b class="mk">+N</b><span class="nm">more lots waiting than drawn</span></li>
+      <li><b class="mk">Holding</b><span class="nm">lots resting in storage between steps</span></li>
+    </ul>
+  </div>
+</section>
+
+<footer class="card bar pill">
+  <button id="play" class="icon" aria-label="Play or pause">❚❚</button>
+  <div class="clock"><span id="day">Day 1</span> <span id="time">00:00</span></div>
+  <div class="speeds" role="group" aria-label="Speed">
+    <button type="button" id="speed" aria-label="Speed: press to change">3×</button>
+  </div>
+  <span id="run-no" class="run-no" title="Each run is one random history of breakdowns and arrivals; the address replays it">Run #</span>
+  <button type="button" id="new-run" class="ghost" title="Play another random run">⟳ New run</button>
+  <button type="button" id="curves-open" class="ghost" aria-expanded="false" aria-controls="curves">Curves</button>
+  <span class="scrub-l">Lots waiting</span>
+  <div class="scrub">
+    <canvas id="spark" aria-hidden="true"></canvas>
+    <input id="scrub" type="range" min="0" max="4320" step="1" value="0" aria-label="Fab time">
+  </div>
+  <button id="fit" type="button" class="ghost" aria-label="Fit the whole fab">Fit</button>
+</footer>
+
+<section id="opening" class="opening" aria-labelledby="open-title">
+  <div class="eyebrow">Lou Latency · CEO · his desk</div>
+  <h1 id="open-title">Morning. I'm Lou. My fab is running late again, so I built it a twin.</h1>
+  <p class="open-sub">This is my desk. My staff are Meta's models. Muse Spark Open answers your questions and writes my rules. Muse Wonder takes on anyone who thinks they can do my job. The simulator scores every change, and I sign.</p>
+  <div id="open-doors" class="open-doors">
+    <div class="door door-play">
+      <span class="door-k">My in-tray</span>
+      <div class="ch-tiles">
+        <a class="ch-tile" href="editor.html?ch=1"><img src="cast/litho/full.webp" alt="" width="224" height="224"><span class="n">1</span><span class="t">Rush hour on the spine</span><span class="q">Everyone wants the same track at nine.</span></a>
+        <a class="ch-tile" href="editor.html?ch=2"><img src="cast/cmp/tired.webp" alt="" width="224" height="224"><span class="n">2</span><span class="t">The gassed polisher</span><span class="q">She's been on shift since Tuesday.</span></a>
+        <a class="ch-tile" href="editor.html?ch=3"><img src="cast/litho/hurt.webp" alt="" width="224" height="224"><span class="n">3</span><span class="t">Breakdown, no spare</span><span class="q">One tool down and nobody on the bench.</span></a>
+        <a class="ch-tile" href="editor.html?ch=4"><img src="cast/cmp/hold.webp" alt="" width="224" height="224"><span class="n">4</span><span class="t">Lean or redundant?</span><span class="q">Cheap right up until something breaks.</span></a>
+      </div>
+      <span class="door-s">Four problems I haven't solved. Fix one and hit the target. Muse Wonder will try too.</span>
+      <span class="inside">4 problems · a free build · up to 3 stars each</span>
+      <a class="btn-solid" href="editor.html?ch=1">Take problem 1 →</a>
+    </div>
+    <div class="door door-floor">
+      <img src="cast/ceo.webp" alt="Lou Latency, the fab's CEO: a cream robot in a navy coat and red tie, flexing a watch whose face is a silicon wafer" width="384" height="384">
+      <div class="door-floor-text">
+        <span class="door-k">Walk the floor with me</span>
+        <span class="door-s">1,043 machines from the SMT2020 testbed, running live in your browser. A new day every visit, and none of them goes to plan.</span>
+      </div>
+      <a class="btn-solid" href="#floor">Show me the floor →</a>
+    </div>
+  </div>
+  <p class="fine">Lou is a cartoon. His fab, and every fab here, starts from the SMT2020 testbed, a public research set of a chip fab's machines, routes and times (Kopp, Hassoun, Kalir, Mönch 2020). No real company's data is used.</p>
+</section>
+
+<section id="curves" class="card curves" aria-label="Curves: the run so far" hidden></section>
+<section id="split-cards" class="card split-cards" aria-live="polite" hidden></section>
+<div id="tip" class="tip" hidden></div>
+<div class="hint" id="hint">Scroll to zoom · drag to move · hover a group · space to pause · F to fit · T to tilt · ⌘K to ask</div>
+
+<script src="look.js"></script>
+<script src="ui.js"></script>
+<script src="charts.js"></script>
+<script src="stages.js"></script>
+<script src="glossary.js"></script>
+<script src="glossary-figs.js"></script>
+<script src="ask.js"></script>
+<script src="building.js"></script>
+<script src="journey.js"></script>
+<script src="evidence.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

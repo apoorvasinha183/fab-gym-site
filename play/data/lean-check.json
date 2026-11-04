@@ -1,0 +1,26 @@
+{
+ "runs": 120,
+ "passed": 120,
+ "jobs": 422989018,
+ "states": 883577289,
+ "policies": [
+  "cr",
+  "fifo",
+  "ppo",
+  "random",
+  "spt",
+  "today"
+ ],
+ "defects": {
+  "off": 60,
+  "on": 60
+ },
+ "rules": [
+  "no machine does two jobs at once",
+  "every lot follows its route",
+  "no batch is overfilled",
+  "nothing runs on a broken machine",
+  "the breaches counted match"
+ ],
+ "note": "Each scored run of the long study, replayed and checked by a referee whose rules are proved in Lean (docs/LEAN-CHECK.md). On the SMT2020 testbed."
+}
