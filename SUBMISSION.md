@@ -10,8 +10,8 @@ person signs.
 
 **What it is:** A digital twin of a 1,043-machine wafer fab on the published SMT2020 testbed, presented in character by
 its robot CEO, Lou Latency. It's a Rust simulator (about 0.03 s per simulated day), in the browser through
-WebAssembly, and a walkable 3D fab in Godot. You can watch the whole fab live, draw your own and race the AI, ask a
-machine why its line is long, or walk the 3D fab while Lou answers questions and takes you where the answer is.
+WebAssembly, and a walkable 3D fab in Godot. You can watch the whole fab live, draw your own and race the AI, build one from a
+napkin sketch, or walk the 3D fab while Lou answers questions and takes you where the answer is.
 
 **How it uses Meta's models:**
 - **Muse Spark Open** (open weights, on Baseten): turns a plain-English question into a scenario that must pass a
@@ -20,10 +20,9 @@ machine why its line is long, or walk the 3D fab while Lou answers questions and
   3D fab: answers from the live run, walking to the right bay, what-ifs scored by the simulator. Every number Lou says
   is checked against the simulator's facts.
 - **Muse Spark 1.3**: supervises the fab day by day. On our teaching fab it got 117 more wafers a day out than today's
-  rule (95% 111.5 to 122.5), for $0.077 over 302 calls. It also reads napkin sketches into fabs, and it wrote the
+  rule (95% 111.5 to 122.5), for $0.077 over 302 calls. It also reads a photo of a fab drawn on paper into a layout, and it wrote the
   film's shot list and composed its 12-cue orchestral score.
 - **Muse Wonder**: the opponent in Race the AI, playing build challenges with the same ten moves as a player.
-- **Muse Spark** also reads a photo of a fab drawn on paper into a layout ("Build from a photo"), using the editor's own moves.
 - **Muse Image**: the whole cast (11 kinds of machine in 10 moods each, the wafer, the lots, Lou), posters, glossary pictures, and the 827
   pictures of the 3:38 film *Sand to Chip*.
 
