@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fab Gym</title>
+<meta name="description" content="Fab Gym: a simulated chip fab run with Meta's models. Muse Spark Open writes the rules and guides you through the fab, the simulator scores every answer, and a Lean referee checks every run.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec; --paper:#fffdf8; --ink:#1b1a22; --soft:#5d5a68; --line:#e4ddd0;
+  --meta:#1a5cff; --meta-soft:#e6eeff; --gold:#e9a400; --mint:#0f8f6a; --rose:#c2412d; --chip:#f0ebe0;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --body:"Atkinson Hyperlegible",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101118; --paper:#181a24; --ink:#eeedf3; --soft:#a7a5b5; --line:#2b2e3d;
+  --meta:#7aa2ff; --meta-soft:#1b2544; --gold:#f2c14e; --mint:#5fd3ad; --rose:#f08a75; --chip:#222533;}}
+:root[data-theme="dark"]{
+  --bg:#101118; --paper:#181a24; --ink:#eeedf3; --soft:#a7a5b5; --line:#2b2e3d;
+  --meta:#7aa2ff; --meta-soft:#1b2544; --gold:#f2c14e; --mint:#5fd3ad; --rose:#f08a75; --chip:#222533;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--body)}
+img{max-width:100%;display:block}
+a{color:var(--meta)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:18px;align-items:center;height:54px;overflow-x:auto;white-space:nowrap}
+nav b{font:800 18px var(--display);margin-right:auto}
+nav a{color:var(--soft);text-decoration:none;font-size:15px}
+nav a:hover{color:var(--ink)}
+header.hero{padding:56px 0 28px}
+.kicker{font:500 13px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--meta)}
+h1{font:800 clamp(40px,7vw,76px)/1.0 var(--display);margin:10px 0 16px;letter-spacing:-.02em}
+h2{font:800 clamp(28px,4vw,42px)/1.1 var(--display);margin:0 0 12px;letter-spacing:-.01em}
+h3{font:600 22px/1.25 var(--display);margin:0 0 6px}
+.lede{font-size:clamp(18px,2.2vw,22px);max-width:62ch;color:var(--soft);margin:0}
+.lede b{color:var(--ink)}
+section{padding:56px 0;border-top:1px solid var(--line)}
+.sub{color:var(--soft);max-width:70ch;margin:0 0 26px}
+.heroimg{border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-top:30px}
+.video{aspect-ratio:16/9;border-radius:18px;border:2px dashed var(--line);display:grid;place-items:center;text-align:center;background:var(--paper);color:var(--soft);padding:16px}
+.video iframe{width:100%;height:100%;border:0;border-radius:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:28px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.stat .n{font:800 34px/1.05 var(--display);color:var(--meta);font-variant-numeric:tabular-nums}
+.stat .l{font-size:14.5px;color:var(--soft)}
+.models{display:grid;gap:14px}
+.model{display:grid;grid-template-columns:230px 1fr 1fr;gap:18px;background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--meta);border-radius:14px;padding:18px 20px}
+.model.open{border-left-color:var(--mint)}
+.model.tried{border-left-color:var(--line)}
+@media (max-width:860px){.model{grid-template-columns:1fr}}
+.model .name{font:600 20px/1.2 var(--display)}
+.model code{font:500 12.5px var(--mono);color:var(--soft);word-break:break-all}
+.pill{display:inline-block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:999px;margin:6px 6px 0 0;border:1px solid currentColor}
+.pill.ow{color:var(--mint)} .pill.api{color:var(--meta)} .pill.t{color:var(--soft)}
+.model dt{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--soft)}
+.model dd{margin:2px 0 10px}
+.split{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:start}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.shot{border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.cap{font-size:14px;color:var(--soft);margin:8px 2px 0}
+.loop{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;counter-reset:s}
+@media (max-width:900px){.loop{grid-template-columns:repeat(2,1fr)}}
+.loop div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;position:relative;font-size:15px}
+.loop div::before{counter-increment:s;content:counter(s);font:800 26px var(--display);color:var(--meta);display:block}
+.loop div.m{border-color:var(--meta);background:var(--meta-soft)}
+.loop div b{display:block;margin-bottom:2px}
+.chat{display:grid;gap:10px}
+.bubble{padding:12px 14px;border-radius:14px;max-width:46ch;font-size:16px}
+.bubble.you{background:var(--chip);justify-self:end;border-bottom-right-radius:4px}
+.bubble.lou{background:var(--meta-soft);border:1px solid var(--meta);border-bottom-left-radius:4px}
+.bubble small{display:block;font:500 12px var(--mono);color:var(--soft);margin-top:6px}
+pre{font:500 13px/1.5 var(--mono);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto;margin:0}
+.log{max-height:330px;overflow:auto}
+.log p{margin:0 0 10px;font-size:15px}
+.log .mv{font:500 12.5px var(--mono);color:var(--meta)}
+.log .sc{font:500 13px var(--mono);color:var(--mint)}
+.cast{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.cast figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:13px;color:var(--soft)}
+.film{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:700px){.film{grid-template-columns:1fr 1fr}}
+.film img{border-radius:10px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:15.5px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--soft)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl{overflow-x:auto}
+.findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.finding{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.finding .tag{font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.finding .tag.y{color:var(--mint)} .finding .tag.n{color:var(--rose)}
+.guard{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.guard div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}
+.guard b{display:block;font:600 18px var(--display);margin-bottom:4px}
+footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
+footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <b>Fab Gym</b>
+  <a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Meta Global AI Developer Hackathon · Startups track · Push the Frontier</div>
+  <div class="split" style="align-items:center">
+    <div>
+      <h1>I'm Lou Latency. I run a chip fab. Sorry for the wait.</h1>
+      <p class="lede">I have 1,043 machines, 105 kinds of them, and lots of wafers that spend most of their lives waiting in line. Every minute I decide what goes next, and I only find out weeks later whether I chose well. So I built a twin of my fab, called <b>Fab Gym</b>, where <b>Meta's models do the thinking</b> before my wafers pay for it.</p>
+    </div>
+    <figure style="margin:0;justify-self:center;max-width:300px"><img src="img/cast/lou.webp" alt="Lou Latency, the fab's robot CEO, drawn with Muse Image"><figcaption class="cap" style="text-align:center">Lou Latency, CEO. Drawn by Muse Image.</figcaption></figure>
+  </div>
+  <div class="heroimg"><img src="img/hero.jpg" alt="Cartoon of a cleanroom boot camp: a wafer in a red headband yells at a sweating polishing robot holding a spirit level. Drawn with Muse Image."></div>
+  <p class="cap">My staff, drawn by Muse Image. My polishers are the ones sweating: they set the speed limit for the whole fab.</p>
+</div></header>
+
+<section id="watch"><div class="wrap">
+  <h2>Let me show you around. Three minutes.</h2>
+  <div class="video" id="video" data-youtube="">
+    <div><b>The video goes here.</b><br>Paste the YouTube video's id into <code>data-youtube</code> on this box, or replace the box with the embed.</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">6</div><div class="l">Meta models at work, two of them open weights</div></div>
+    <div class="stat"><div class="n">1,000+</div><div class="l">pictures drawn by Muse Image: the cast, posters, the glossary and the film</div></div>
+    <div class="stat"><div class="n">120 / 120</div><div class="l">scored runs passed the Lean referee, about 423 million machine jobs</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">numbers a model may say that the simulator didn't give it</div></div>
+  </div>
+</div></section>
+
+<section id="meta"><div class="wrap">
+  <div class="kicker">The core of the entry</div>
+  <h2>My staff in the twin: Meta's models</h2>
+  <p class="sub">"A CEO is only as good as his staff, and mine are Meta's models. Each has a real job, and each gets checked, because I've been burned before." Green marks Meta's open-weights models. Every call's cost is counted from its token usage and stays under a spending cap.</p>
+  <div class="models">
+
+    <div class="model open">
+      <div><div class="name">Muse Spark Open</div><code>meta-models/muse-spark-open-1026</code><br><span class="pill ow">open weights</span><span class="pill t">on Baseten</span></div>
+      <dl><dt>Its job</dt><dd>Turns a question in plain words into a scenario the simulator can run, with every value marked as said or assumed. Writes dispatch rules as small Rust functions; each is compiled to WebAssembly, run in a sandbox, scored, and read back so the model can rewrite it.</dd></dl>
+      <dl><dt>Also</dt><dd><b>Lou's brain</b> in the 3D fab: Lou answers from the live run and walks you to where the answer is.</dd><dt>Checked by</dt><dd>a schema, the scorer on held-out seeds, and a number check on everything Lou says</dd></dl>
+    </div>
+
+    <div class="model">
+      <div><div class="name">Muse Spark 1.3</div><code>muse-spark-1.3-contributor</code><br><span class="pill api">Meta Model API</span></div>
+      <dl><dt>Its job</dt><dd>The fast thinker. Supervises the fab day by day: proposes up to three settings at each look, which the simulator tries on copies. Reads a napkin sketch into a fab. Wrote the film's shot list and composed its 12-cue orchestral score.</dd></dl>
+      <dl><dt>Checked by</dt><dd>the simulator trying every proposal; the score checked note by note (a wrong note is sent back for a rewrite)</dd></dl>
+    </div>
+
+    <div class="model">
+      <div><div class="name">Muse Wonder</div><code>muse-wonder-1.0</code><br><span class="pill api">Meta Model API</span></div>
+      <dl><dt>Its job</dt><dd>Your opponent in <b>Race the AI</b>. It plays a build challenge with the same ten moves a player has: look at the map, lay track, set breakdown handling, add cars, run the simulator, and try again.</dd></dl>
+      <dl><dt>Checked by</dt><dd>the editor itself: every move shows on the map, can be undone, and a bad move is refused and shown, not hidden</dd></dl>
+    </div>
+
+    <div class="model open">
+      <div><div class="name">Muse Glimmer</div><code>Muse-Glimmer-30B, Q4_K_M</code><br><span class="pill ow">open weights</span><span class="pill t">our own server</span></div>
+      <dl><dt>Its job</dt><dd>The floor coach. Click a machine group and ask "why is the line so long?" Glimmer calls one tool, <code>read_the_hour</code>, gets that hour's numbers and answers in two or three sentences. It runs on our own 16-core server through llama.cpp, with no GPU and no per-question bill.</dd></dl>
+      <dl><dt>Checked by</dt><dd>the number check: an answer quoting any number not in the hour's data is refused, and the card names the number</dd></dl>
+    </div>
+
+    <div class="model">
+      <div><div class="name">Muse Image</div><code>muse-image-1.0</code><br><span class="pill api">Meta Model API</span></div>
+      <dl><dt>Its job</dt><dd>Every picture. The cast: 11 kinds of machine, each in 10 moods read from the run, plus the wafer, the lots and Lou. Posters, the glossary's pictures, and 827 pictures for the film <i>Sand to Chip</i>.</dd></dl>
+      <dl><dt>Checked by</dt><dd>on-model checks by Muse Spark, and our eyes</dd></dl>
+    </div>
+
+    <div class="model tried">
+      <div><div class="name">Tried, and said so</div><code>sam-3.1 · muse-voice-transcribe-1.0</code><br><span class="pill t">not in the demo</span></div>
+      <dl><dt>SAM 3.1</dt><dd>Tried for reading sketches: it found nothing in plain line drawings, so the sketch reader uses Muse Spark.</dd></dl>
+      <dl><dt>Voice Transcribe</dt><dd>Wired to a Speak button, but the endpoint didn't answer during the build, so the button stays out of the demo.</dd></dl>
+    </div>
+  </div>
+</div></section>
+
+<section id="rules"><div class="wrap">
+  <div class="kicker">Muse Spark Open · the agent loop</div>
+  <h2>Meta's model writes my rules. The twin decides if they're any good.</h2>
+  <p class="sub">"Here's my morning. A polisher just finished. Five lots are waiting: a rush order, one that has waited nine hours, one needing a setup change, one a step from done, and one on a timer. Which goes next? My fab makes that call thousands of times a day on rules of thumb. Now Muse Spark Open writes the rule, and the twin tests it before it touches a wafer."</p>
+  <div class="loop">
+    <div class="m"><b>You ask</b>in plain words.</div>
+    <div class="m"><b>Muse Spark Open</b>turns it into a scenario that must pass a schema, every value marked said or assumed.</div>
+    <div class="m"><b>It writes rules</b>as small Rust functions, or proposes caps, spare tools and release plans.</div>
+    <div><b>Sandboxed</b>Each rule is compiled to WebAssembly: no imports, 64 MiB of memory, a fuel limit on every decision.</div>
+    <div><b>Scored</b>on training days; the model reads the scores and rewrites. Finalists run once on held-out days against today's rule.</div>
+    <div><b>A person signs</b>The card quotes only the scorer's numbers, with 95% intervals.</div>
+  </div>
+  <div class="split" style="margin-top:26px">
+    <div class="card">
+      <h3>Supervising the fab, day by day</h3>
+      <p>On a teaching fab of our own, Muse Spark looked at the fab once a day, saw only what a supervisor could see, and proposed up to three settings with a reason for each. The simulator tried them on copies and kept the best.</p>
+      <div class="tbl"><table>
+        <tr><th>Over 10 held-out seeds</th><th>Wafers a day</th><th>Against today's rule</th></tr>
+        <tr><td>Today's rule, no cap</td><td class="num">735.0</td><td></td></tr>
+        <tr><td>Muse Spark supervising, a look every 24 h</td><td class="num">852.0</td><td class="num">+117.0 (+111.5 to +122.5)</td></tr>
+        <tr><td>The best fixed setting, found by trying all 24</td><td class="num">851.0</td><td class="num">+116.0 (+109.8 to +122.2)</td></tr>
+      </table></div>
+      <p class="cap">300 looks, 302 model calls, $0.077 in all. The model found the best setting without trying all 24 (+1.0 against it, −1.1 to +3.1: a tie).</p>
+    </div>
+    <div class="card">
+      <h3>And where it didn't win</h3>
+      <p>"I'll be straight with you." On the full SMT2020 fab, over 60 settled days, no policy we tried beat the fab's own rule (1,263 wafers a day) on any of ten held-out seeds, whether written by the model, evolved, or learned with reinforcement learning. Our evolved rules tied it, by copying it. FIFO, shortest-job-first and a PPO policy fell to 595 to 668.</p>
+      <p>We report that plainly. Three days of scoring had made every rule look fine, because a full fab coasts on the work the old rule set up. Fab Gym exists to catch that kind of illusion before a real fab pays for it.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="lou"><div class="wrap">
+  <div class="kicker">Muse Spark Open · the 3D fab</div>
+  <h2>Walk my fab with me. My brain is Meta's.</h2>
+  <p class="sub">"In the 3D twin, I give the tours. Type me a question and Muse Spark Open decides what I say and where I take you. I can answer from the live run, walk you to any bay, explain a word, or run a what-if the simulator scores. I'm not allowed to make up numbers. Believe me, I've tried."</p>
+  <div class="split">
+    <div>
+      <div class="chat card">
+        <div class="bubble you">Where do wafers get polished?</div>
+        <div class="bubble lou">Wafers get polished in CMP. I'll take you there now.<small>Muse Spark Open · 17.8 s · $0.028 · first try · walk_to: Planar</small></div>
+        <p class="cap" style="margin:4px 0 0">A real reply from the end-to-end test. Then I walked the visitor across the campus to the polishing bay.</p>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <h3>What keeps me honest</h3>
+        <ul style="margin:6px 0 0;padding-left:20px">
+          <li>I'm handed the live fab's facts: the clock, the longest queues, what's down, the bay you're standing in.</li>
+          <li>My reply must be JSON: <code>say</code>, <code>walk_to</code>, <code>explain</code>, <code>try</code>.</li>
+          <li>Every number I say must come from those facts. A bay must be a real bay, a word a real glossary entry.</li>
+          <li>If a check fails, the model is asked once more with the reasons. If it fails again, I fall back to my scripted answers.</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="shot"><img src="img/fab3d/shot-24.jpg" alt="The 3D fab: the CMP bay behind glass, with a card saying how many tools work and how many lots wait"></div>
+      <p class="cap">The 3D fab in Godot. Each bay's card reads from the simulator. This shot is from 2 November.</p>
+      <div class="cast" style="margin-top:12px">
+        <figure><img src="img/cast/lou.webp" alt="Lou Latency">Lou Latency</figure>
+        <figure><img src="img/cast/10-cmp.webp" alt="The polishing robot">Polishing</figure>
+        <figure><img src="img/cast/12-wafer.webp" alt="The wafer coach">The wafer</figure>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="race"><div class="wrap">
+  <div class="kicker">Muse Wonder · Muse Glimmer · the browser fab</div>
+  <h2>Think you can lay out a fab? Race Meta's model.</h2>
+  <p class="sub">"In the browser twin you draw your own fab, and the simulator scores it the moment you let go. Muse Wonder plays the same challenges with the same moves you have. Beat it, and I'll consider you for a job."</p>
+  <div class="split">
+    <div>
+      <div class="shot"><img src="img/build.jpg" alt="The Build page: a fab on grid paper with tools, track and cars, a Challenge met card and confetti"></div>
+      <p class="cap">Build: draw a fab on grid paper, and the simulator scores it the moment you stop drawing. Four challenges and a free build.</p>
+      <div class="card" style="margin-top:12px">
+        <h3>Muse Glimmer, the floor coach</h3>
+        <p style="margin:0">Click any machine group on the live floor and ask why its line is long. Meta's open Glimmer model answers from that hour's numbers, on our own Linux server, for $0 a question. If it quotes a number the hour doesn't hold, the answer is refused.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Muse Wonder plays challenge 1</h3>
+      <p class="cap" style="margin:0 0 10px">The live game log, in its own words. Muse Wonder · $0.16 of a $2 cap · ended on three stars.</p>
+      <div class="log">
+        <p><span class="mv">look</span><br>Starting by looking at the fab to find the breaking track and the lithography loop.</p>
+        <p><span class="mv">set_when_it_breaks</span><br>The breaking piece is at 3,6 with cars set to wait, but the north loop from 2,6 to 5,6 can bypass it. I'll set that piece to route around instead.</p>
+        <p><span class="mv">run</span> <span class="sc">675 wafers a day · ★☆☆</span></p>
+        <p><span class="mv">set_cars</span><br>675 beats the 670 target but not by enough for more stars, so I'll try adding more cars to push output higher.</p>
+        <p><span class="mv">run</span> <span class="sc">663 wafers a day · ☆☆☆</span></p>
+        <p><span class="mv">set_cars</span><br>Fifteen cars made it worse, likely from congestion, so I'll try fewer cars instead.</p>
+        <p><span class="mv">look</span><br>Both 10 and 15 cars gave 663, which is odd, so I'll look to check the route-around setting is still in place.</p>
+        <p><span class="mv">set_cars</span><br>The routing is still set, so the drop may just be car count. I'll restore 12 cars, which gave the best result.</p>
+        <p><span class="mv">run</span> <span class="sc">675 wafers a day · ★☆☆</span></p>
+        <p class="cap">… and on to three stars. Every move goes through the same editor a player uses.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="film"><div class="wrap">
+  <div class="kicker">Muse Image · Muse Spark · the cinema</div>
+  <h2><i>Sand to Chip</i>: a 3:38 film, drawn and scored by Meta's models</h2>
+  <p class="sub">"My fab has a cinema. Naturally. It plays the story of Grain, a grain of sand who keeps its face through every form, from quartz to a finished chip, and ends up coaching my wafers. Muse Spark wrote the shot list and composed the score: twelve cues for full orchestra around Grain's theme. Muse Image painted all 827 pictures. I have a cameo. It's tasteful."</p>
+  <div class="film">
+    <img src="img/film/f-0.06.jpg" alt="Grain sits among quartz rocks in a quarry">
+    <img src="img/film/f-0.22.jpg" alt="Grain as a gas in a purifying tower, with a simplified-view inset">
+    <img src="img/film/f-0.40.jpg" alt="A silicon crystal sliced into wafers while Grain watches">
+    <img src="img/film/f-0.58.jpg" alt="Lithography: Grain under a glass dome, an inset of the patterned layers">
+    <img src="img/film/f-0.75.jpg" alt="A transistor diagram: tiny switches controlling signals">
+    <img src="img/film/f-0.92.jpg" alt="The finished chip dancing on a circuit board">
+  </div>
+  <p class="cap">Stills from the film. The fab's part follows the SMT2020 testbed; the steps before and after it are general knowledge. Magnified insets are marked "simplified view".</p>
+  <div class="cast" style="margin-top:22px">
+    <figure><img src="img/cast/cmp-work.webp" alt="">In the zone</figure>
+    <figure><img src="img/cast/cmp-tired.webp" alt="">Gassed</figure>
+    <figure><img src="img/cast/cmp-hurt.webp" alt="">Pulled a muscle</figure>
+    <figure><img src="img/cast/cmp-physio.webp" alt="">At the physio</figure>
+    <figure><img src="img/cast/01-litho.webp" alt="">Lithography</figure>
+    <figure><img src="img/cast/03-dry.webp" alt="">Dry etch</figure>
+    <figure><img src="img/cast/05-diff.webp" alt="">Diffusion</figure>
+  </div>
+  <p class="cap">A machine's mood is what the simulator recorded for it: working, idle, broken down, under repair. Every machine has ten moods, all drawn with Muse Image.</p>
+</div></section>
+
+<section id="trust"><div class="wrap">
+  <div class="kicker">Why you can believe the numbers</div>
+  <h2>Models propose. The simulator scores. Lean checks. I sign.</h2>
+  <p class="sub">"Clever is cheap. Before I let any answer near my wafers, four things have to hold."</p>
+  <div class="guard">
+    <div><b>An exact simulator</b>Written in Rust, about 0.03 s per simulated day on one laptop core, and in the browser through WebAssembly. It reproduces a reference engine's event log bit for bit.</div>
+    <div><b>A fair fight</b>Two rules are compared on the same random draws, so a breakdown that hits one hits the other. Every result is a paired difference with a 95% interval.</div>
+    <div><b>A sandbox</b>Model-written rules run as WebAssembly with no imports, a memory limit and a fuel limit per decision.</div>
+    <div><b>A Lean referee</b>Every scored run writes a receipt. A checker in Lean 4, with proofs, confirms no machine did two jobs at once, every lot followed its route, no batch was overfilled, nothing ran on a broken machine, and the breach count is right. It passed 120 of 120 runs and rejects tampered copies.</div>
+  </div>
+  <p class="cap">A pass shows the runs follow the model's rules. It doesn't show the simulator matches a real fab.</p>
+</div></section>
+
+<section id="found"><div class="wrap">
+  <h2>What my twin taught me</h2>
+  <div class="findings">
+    <div class="finding"><div class="tag y">Holds up</div><p>Holding rush prototypes at the door until there's room earns more, and costs nothing to build, up to four times today's prototype orders.</p></div>
+    <div class="finding"><div class="tag y">Holds up, with a cost</div><p>Capping how much work is inside the fab gets each wafer out about a month sooner, but costs output when machines break often.</p></div>
+    <div class="finding"><div class="tag n">Not yet</div><p>Our trained AI doesn't beat the fab's own rule for picking the next job. We kept that finding.</p></div>
+    <div class="finding"><div class="tag y">Exact</div><p>Every scored run was checked by a separate program: 120 of 120 passed.</p></div>
+  </div>
+  <div class="split" style="margin-top:22px">
+    <div class="shot"><img src="img/evidence.jpg" alt="The Evidence page with four finding cards"></div>
+    <div class="card"><h3>Little's law, checked</h3><p style="margin:0">On seed 0, today's rule holds about 3,014 lots of 25 wafers and gets 1,246 wafers a day out: 3,014 × 25 ÷ 1,246 ≈ 60.5 days, exactly the cycle time we measure. The polishers set the speed limit, at most about 1,302 wafers a day. Today's rule gets 1,263.</p></div>
+  </div>
+</div></section>
+
+<section id="new"><div class="wrap">
+  <h2>What's new in this hackathon</h2>
+  <p class="sub">Everything in the Fab Gym repository was built during the hackathon, starting after the 12:00 PM ET kickoff on 26 October 2026. The git history is the record.</p>
+  <div class="tbl"><table>
+    <tr><th>Built for the hackathon</th><th>Built before, kept outside the repository</th></tr>
+    <tr><td>The Rust simulator, the rule sandbox, the browser fab (Floor, Build, Evidence), every Meta model integration above, Lou and the 3D fab, Race the AI, the floor coach, the Lean referee, the film, the cast</td><td>A Python reference engine for the SMT2020 testbed, used only to record the event logs the Rust simulator must match (none of its code is copied); earlier results labelled "pre-existing" where quoted</td></tr>
+  </table></div>
+  <p class="cap">Code: <a href="https://github.com/apoorvasinha183/fab-gym">github.com/apoorvasinha183/fab-gym</a></p>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="line">Fab Gym, by Chetnova. An operating system for your full org.</div>
+  <p><b>Out of character:</b> Lou Latency is a cartoon, and so is his company. His fab is the SMT2020 testbed, a published research model of a wafer fab (1,043 machines in 105 groups, product routes of 583 and 343 steps). No real fab's data is used, and no real fab is claimed.</p>
+  <p>The SMT2020 testbed: Kopp, Hassoun, Kalir and Mönch, <i>SMT2020: A Semiconductor Manufacturing Testbed</i>, IEEE Transactions on Semiconductor Manufacturing, 2020. Made with Meta's Muse Spark Open, Muse Spark, Muse Wonder, Muse Glimmer and Muse Image. 3D in Godot (MIT). Not a real fab; prices are assumed.</p>
+</div></footer>
+
+<script>
+(() => {
+  const v = document.getElementById("video"), id = (v.dataset.youtube || "").trim();
+  if (id) v.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '" title="Fab Gym in three minutes" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+})();
+</script>
+</body>
+</html>
