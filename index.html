@@ -142,6 +142,17 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
   .champ figcaption{width:170px}
 }
 .sub.big{font:500 clamp(18px,2vw,22px)/1.5 var(--display);color:var(--ink);max-width:68ch}
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 12px;counter-reset:s}
+.pipeline .step{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.pipeline .step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:22%;font:700 18px var(--body);color:var(--meta);z-index:2}
+.pipeline img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+.pipeline figcaption{padding:10px 12px 12px;display:grid;gap:6px;font-size:13.5px;line-height:1.4}
+.pipeline .sn{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--meta)}
+.pipeline .lou{font:600 15px/1.35 var(--display)}
+.pipeline .meta{color:var(--soft);font-size:12.5px;border-top:1px solid var(--line);padding-top:6px}
+.premiere{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:12px 16px;margin:4px 0 8px}
+@media (max-width:980px){.pipeline{grid-template-columns:1fr 1fr}.pipeline .step::after{display:none}}
+@media (max-width:560px){.pipeline{grid-template-columns:1fr}}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -252,7 +263,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
   </div>
   <div class="stats">
     <div class="stat"><div class="n">4</div><div class="l">Meta models at work, including the open-weights Muse Spark Open</div></div>
-    <div class="stat"><div class="n">1,000+</div><div class="l">pictures drawn by Muse Image: the cast, posters, the glossary and the film</div></div>
+    <div class="stat"><div class="n">Every</div><div class="l">picture drawn by Muse Image: the cast and its moods, the posters, the glossary, the story and the film</div></div>
     <div class="stat"><div class="n">120 / 120</div><div class="l">scored runs passed the Lean referee, about 423 million machine jobs</div></div>
     <div class="stat"><div class="n">0</div><div class="l">numbers a model may say that the simulator didn't give it</div></div>
   </div>
@@ -284,7 +295,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 
     <div class="model">
       <div><div class="name">Muse Image</div><code>muse-image-1.0</code><br><span class="pill api">Meta Model API</span></div>
-      <dl><dt>Its job</dt><dd>Every picture. The cast: 11 kinds of machine, each in 10 moods read from the run, plus the wafer, the lots and Lou. Posters, the glossary's pictures, and 827 pictures for the film <i>Sand to Chip</i>.</dd></dl>
+      <dl><dt>Its job</dt><dd>Every picture. The cast: 11 kinds of machine, each in 10 moods read from the run, plus the wafer, the lots and Lou. Posters, the glossary's pictures, and every room and pose of the film <i>Sand to Chip</i>.</dd></dl>
       <dl><dt>Checked by</dt><dd>on-model checks by Muse Spark, and our eyes</dd></dl>
     </div>
 
@@ -362,28 +373,18 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </div></section>
 
 <section id="film"><div class="wrap">
-  <div class="kicker">Muse Image · Muse Spark · the cinema</div>
-  <h2><i>Sand to Chip</i>: my 3:38 epic, drawn and scored by Meta's models</h2>
-  <p class="sub">"My fab owns a cinema. Of course. It screens Grain, a plucky grain of sand holding its face from quartz to finished chip, now coaching my wafers. Muse Spark wrote the shot list and scored it: twelve cues for full orchestra around Grain's theme. Muse Image painted all 827 pictures. My cameo stays tasteful."</p>
-  <div class="film">
-    <img src="img/film/f-0.06.jpg" alt="Grain sits among quartz rocks in a quarry">
-    <img src="img/film/f-0.22.jpg" alt="Grain as a gas in a purifying tower, with a simplified-view inset">
-    <img src="img/film/f-0.40.jpg" alt="A silicon crystal sliced into wafers while Grain watches">
-    <img src="img/film/f-0.58.jpg" alt="Lithography: Grain under a glass dome, an inset of the patterned layers">
-    <img src="img/film/f-0.75.jpg" alt="A transistor diagram: tiny switches controlling signals">
-    <img src="img/film/f-0.92.jpg" alt="The finished chip dancing on a circuit board">
+  <div class="kicker">A fab presents · Meta's models in every step</div>
+  <h2>See a grain of sand conquer destiny</h2>
+  <p class="sub">Every empire must carve its legend into time. I built a studio beside the fab so the world will feel our rise.</p>
+  <div class="pipeline">
+    <figure class="step"><img src="img/studio/00-script.jpg" alt="The screenplay: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">1 · The screenplay</span><span class="lou">I hammered the saga at the typewriter with Meta aid, while fellow Lous read, wept, and roared around me.</span><span class="meta">Muse Spark wrote the first shot list and voice-over; a reviewer's rewrite became the final screenplay.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/00b-board.jpg" alt="The storyboard: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">2 · The storyboard</span><span class="lou">I mapped the march from dust to destiny on the great wall with Meta vision, pointer raised for the coming ages.</span><span class="meta">Muse Image drew the rough boards for the story reel, timed to the soundtrack.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/01-set.jpg" alt="The shoot: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">3 · The shoot</span><span class="lou">I raised the soundstage inside the fab with Meta power, every helmet and headset worn by loyal Lous hearing my megaphone.</span><span class="meta">Muse Image painted every room and every pose; our own code drew the diagrams and moved the camera.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/02-take.jpg" alt="The take: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">4 · The take</span><span class="lou">I framed the glowing wafer with Meta light, guiding fellow Lous through a heroic stand that will shake the earth.</span><span class="meta">Muse Spark checked each drawing against the boards and sent the wrong ones back.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/03-edit.jpg" alt="The cut and the score: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">5 · The cut and the score</span><span class="lou">I joined my Lous splicing reels and bowing violins with Meta rhythm, painting light until the chip glowed and I trembled.</span><span class="meta">Muse Spark composed twelve cues for full orchestra around Grain's theme.</span></figcaption></figure>
   </div>
-  <p class="cap">Stills from the film. The fab's part follows the SMT2020 testbed; the steps before and after it are general knowledge. Magnified insets are marked "simplified view".</p>
-  <div class="cast" style="margin-top:22px">
-    <figure><img src="img/cast/cmp-work.webp" alt="">In the zone</figure>
-    <figure><img src="img/cast/cmp-tired.webp" alt="">Gassed</figure>
-    <figure><img src="img/cast/cmp-hurt.webp" alt="">Pulled a muscle</figure>
-    <figure><img src="img/cast/cmp-physio.webp" alt="">At the physio</figure>
-    <figure><img src="img/cast/01-litho.webp" alt="">Lithography</figure>
-    <figure><img src="img/cast/03-dry.webp" alt="">Dry etch</figure>
-    <figure><img src="img/cast/05-diff.webp" alt="">Diffusion</figure>
-  </div>
-  <p class="cap">A machine's mood is what the simulator recorded for it: working, idle, broken down, under repair. Every machine has ten moods, all drawn with Muse Image.</p>
+  <div class="premiere"><b>What came out: <i>Sand to Chip</i>.</b> A 3:38 film of a grain of sand that becomes a chip, drawn, directed and scored with Meta's models.</div>
+  <p class="cap">The studio pictures were drawn by Muse Image, every Lou from his cast portrait; Lou's lines were written by Muse Spark. The notes under them say what Meta's models did in each step of the real film.</p>
 </div></section>
 
 <section id="trust"><div class="wrap">

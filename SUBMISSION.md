@@ -23,8 +23,7 @@ napkin sketch, or walk the 3D fab while Lou answers questions and takes you wher
   rule (95% 111.5 to 122.5), for $0.077 over 302 calls. It also reads a photo of a fab drawn on paper into a layout, and it wrote the
   film's shot list and composed its 12-cue orchestral score.
 - **Muse Wonder**: the opponent in Race the AI, playing build challenges with the same ten moves as a player.
-- **Muse Image**: the whole cast (11 kinds of machine in 10 moods each, the wafer, the lots, Lou), posters, glossary pictures, and the 827
-  pictures of the 3:38 film *Sand to Chip*.
+- **Muse Image**: the whole cast (11 kinds of machine in 10 moods each, the wafer, the lots, Lou), posters, glossary pictures, and every room and pose of the 3:38 film *Sand to Chip*.
 
 **Impact:** A fab can't try a new rule for its floor without risking weeks of output. Fab Gym tests it first, says
 how sure it is, and explains it in words a newcomer follows. The same machinery is Chetnova's: an operating system for
