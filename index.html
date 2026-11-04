@@ -123,6 +123,24 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
   .strip{grid-template-columns:1fr 1fr}
   .strip figure::after{display:none}
 }
+.stage{position:relative;max-width:880px;margin:18px auto 8px;aspect-ratio:1/0.86;background:radial-gradient(ellipse at 50% 45%,#2a2230 0%,var(--paper) 70%);border:1px solid var(--line);border-radius:22px}
+.champ{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:14%;margin:0;border-radius:14px;overflow:hidden;border:2px solid var(--line);background:#111;cursor:pointer;transition:transform .15s,border-color .15s;z-index:1}
+.champ.host{left:50%;top:50%;width:27%;border-color:var(--gold)}
+.champ img{width:100%;display:block;aspect-ratio:1;object-fit:cover}
+.champ figcaption{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:9px;background:linear-gradient(to top,rgba(8,8,12,.94) 0%,rgba(8,8,12,.82) 55%,rgba(8,8,12,.35) 100%);color:#f4f1ea;font-size:12px;line-height:1.3;opacity:0;transition:opacity .15s}
+.champ figcaption b{font:700 13px var(--display)}
+.champ figcaption i{color:var(--gold);font-style:normal;font-size:11.5px}
+.champ.host figcaption{font-size:14px}.champ.host figcaption b{font-size:18px}
+.champ:hover,.champ:focus{transform:translate(-50%,-50%) scale(1.35);border-color:var(--gold);z-index:5;outline:none}
+.champ.host:hover,.champ.host:focus{transform:translate(-50%,-50%) scale(1.06)}
+.champ:hover figcaption,.champ:focus figcaption{opacity:1}
+.champ.human figcaption b{font-size:12.5px}
+@media (max-width:760px){
+  .stage{aspect-ratio:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px}
+  .champ,.champ.host{position:relative;left:auto;top:auto;transform:none;width:auto}
+  .champ.host{grid-column:1 / -1;width:60%;justify-self:center}
+  .champ:hover,.champ:focus,.champ.host:hover,.champ.host:focus{transform:none}
+}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -130,7 +148,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 <body>
 <nav><div class="wrap">
   <b>Fab Gym</b>
-  <a href="#top">Crisis</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
+  <a href="#top">Crisis</a><a href="#cast">Cast</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
 </div></nav>
 
 <header class="hero" id="top"><div class="wrap">
@@ -164,6 +182,29 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
   </div>
   <p class="cap">Every picture drawn by Meta's Muse Image, every Lou from his cast portrait; every word Lou says on this page written by Meta's Muse Spark from our brief, with the facts and numbers locked. Lou is a cartoon, and so is his crisis. His fab is the SMT2020 testbed.</p>
 </div></header>
+
+<section id="cast"><div class="wrap">
+  <div class="kicker">The cast · drawn and written by Meta's models</div>
+  <h2>Meet my muscle machines</h2>
+  <p class="sub">"Behold my silicon stage of champions! I sculpted every bulging beast flexing here with my own glorious golden hands!" Hover over anyone, or tap them, to hear Lou brag.</p>
+  <div class="stage">
+    <figure class="champ host" tabindex="0"><img src="img/flex/00-lou.jpg" alt="Lou Latency hosting, a golden trophy raised" loading="lazy"><figcaption><b>Lou Latency</b><i>Host, owner, visionary</i><span>Kneel, peasants! Billionaire Lou flexes oiled silicon champs, hoisting golden glory!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:50.0%;--y:9.0%"><img src="img/flex/01-litho.jpg" alt="Lithography The Poser, flexing on stage" loading="lazy"><figcaption><b>Lithography</b><i>The Poser</i><span>My Poser prints circuits with pure light, my priciest flex of 203 tools!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:69.1%;--y:13.7%"><img src="img/flex/02-lithomet.jpg" alt="Litho metrology The Balancer, flexing on stage" loading="lazy"><figcaption><b>Litho metrology</b><i>The Balancer</i><span>My 53 Balancers flex hard checking every new layer lines up with the one below!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:83.7%;--y:26.7%"><img src="img/flex/03-dry.jpg" alt="Dry etch The Boxer, flexing on stage" loading="lazy"><figcaption><b>Dry etch</b><i>The Boxer</i><span>My Boxer blasts bare silicon with plasma, 362 bruisers strong!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:90.7%;--y:45.1%"><img src="img/flex/04-wet.jpg" alt="Wet etch and clean The Swimmer, flexing on stage" loading="lazy"><figcaption><b>Wet etch and clean</b><i>The Swimmer</i><span>My Swimmer scrubs wafers sparkling clean in chemical baths, 112 tubs of glory!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:88.3%;--y:64.5%"><img src="img/flex/05-diff.jpg" alt="Diffusion The Yogi, flexing on stage" loading="lazy"><figcaption><b>Diffusion</b><i>The Yogi</i><span>My Yogi slow-bakes huge batches for hours in my 75 furnaces!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:77.2%;--y:80.7%"><img src="img/flex/06-diel.jpg" alt="Dielectric The Squatter, flexing on stage" loading="lazy"><figcaption><b>Dielectric</b><i>The Squatter</i><span>My 59 Squatters pump out insulating films between wiring layers in Lou luxury!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:59.8%;--y:89.8%"><img src="img/flex/07-tf.jpg" alt="Thin film The Kettlebell, flexing on stage" loading="lazy"><figcaption><b>Thin film</b><i>The Kettlebell</i><span>My Kettlebell pumps metal films, 90 machines of solid Lou steel!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:40.2%;--y:89.8%"><img src="img/flex/08-tfmet.jpg" alt="Thin film metrology The Little Lifter, flexing on stage" loading="lazy"><figcaption><b>Thin film metrology</b><i>The Little Lifter</i><span>My Little Lifter measures every film thick, only 4 elite inspectors!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:22.8%;--y:80.7%"><img src="img/flex/09-imp.jpg" alt="Ion implant The Thrower, flexing on stage" loading="lazy"><figcaption><b>Ion implant</b><i>The Thrower</i><span>My Thrower hurls ions to command where current flows, 35 cannons blazing!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:11.7%;--y:64.5%"><img src="img/flex/10-cmp.jpg" alt="Polishing (CMP) The Plank, flexing on stage" loading="lazy"><figcaption><b>Polishing (CMP)</b><i>The Plank</i><span>My Plank polishes layers flat with 34 slabs, setting my speed limit!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:9.3%;--y:45.1%"><img src="img/flex/11-defmet.jpg" alt="Defect inspection The Spotter, flexing on stage" loading="lazy"><figcaption><b>Defect inspection</b><i>The Spotter</i><span>My Spotter hunts specks with 16 eyes and benches loser lots!</span></figcaption></figure>
+    <figure class="champ" tabindex="0" style="--x:16.3%;--y:26.7%"><img src="img/flex/12-wafer.jpg" alt="The wafer The Drill Coach, flexing on stage" loading="lazy"><figcaption><b>The wafer</b><i>The Drill Coach</i><span>My Drill Coach marches 25 wafers per lot toward glorious Lou perfection!</span></figcaption></figure>
+    <figure class="champ human" tabindex="0" style="--x:30.9%;--y:13.7%"><img src="img/flex/13-human.jpg" alt="Biological Intelligence., flexing on stage" loading="lazy"><figcaption><b>Biological Intelligence.</b><span>Useful.</span></figcaption></figure>
+  </div>
+  <p class="cap">Every champion drawn by Meta's Muse Image from its cast picture; every brag written by Meta's Muse Spark from the machine's real job in the fab, with its numbers checked. The machines are the SMT2020 testbed's generic types.</p>
+</div></section>
 
 <section id="watch"><div class="wrap">
   <h2>Tour my empire. Three minutes.</h2>
