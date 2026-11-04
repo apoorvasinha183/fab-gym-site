@@ -96,6 +96,13 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .guard{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
 .guard div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}
 .guard b{display:block;font:600 18px var(--display);margin-bottom:4px}
+.tale{max-width:760px;display:grid;gap:18px}
+.tale p{margin:0;font:500 20px/1.5 var(--display)}
+.tale .lead{font-size:clamp(22px,3vw,28px);font-weight:600}
+.tale .panel{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.tale .panel img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+.tale .beat{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
+@media (max-width:760px){.tale .beat{grid-template-columns:1fr}.tale .beat.flip p{order:2}.tale p{font-size:18px}}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -103,11 +110,11 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 <body>
 <nav><div class="wrap">
   <b>Fab Gym</b>
-  <a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
+  <a href="#story">Story</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
-  <div class="kicker">Meta Global AI Developer Hackathon · Startups track · Push the Frontier</div>
+  <div class="kicker">Meta Global AI Developer Hackathon · Indie track · Push the Frontier</div>
   <div class="split" style="align-items:center">
     <div>
       <h1>I'm Lou Latency. I run a chip fab. Sorry for the wait.</h1>
@@ -118,6 +125,26 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
   <div class="heroimg"><img src="img/hero.jpg" alt="Cartoon of a cleanroom boot camp: a wafer in a red headband yells at a sweating polishing robot holding a spirit level. Drawn with Muse Image."></div>
   <p class="cap">My staff, drawn by Muse Image. My polishers are the ones sweating: they set the speed limit for the whole fab.</p>
 </div></header>
+
+<section id="story"><div class="wrap">
+  <div class="kicker">How it began</div>
+  <h2>The great memory crisis</h2>
+  <div class="tale">
+    <figure class="panel wide"><img src="img/opener/01-balcony.jpg" alt="Lou on his balcony above a sea of chip factories at night, drawn with Muse Image" loading="lazy"></figure>
+    <p class="lead">"Every age has its crisis. The Bronze Age ran out of tin. Rome ran out of Rome. Ours has run out of <em>memory</em>."</p>
+    <p>"There is a DRAM shortage, a global one. Across the world, phones forget. Laptops hesitate. Somewhere, a smart fridge has forgotten what milk is. Surgeons wait. Markets wait. A rocket sits on its pad, buffering. Humanity's progress: blocked."</p>
+    <div class="beat">
+      <figure class="panel"><img src="img/opener/06-son.jpg" alt="Son of Lou in tears beside a stalled laptop, drawn with Muse Image" loading="lazy"></figure>
+      <p>"My son's progress: blocked. He has been at nineteen percent since Tuesday. He has missed three birthdays. And I, Lou Latency, owner of the finest fab on Earth, <em>cannot keep up</em>. This. Is. Unacceptable. We must push the frontier."</p>
+    </div>
+    <div class="beat flip">
+      <p>"And then, in my darkest hour, Cerebral Valley and Meta opened a hackathon. The very week I needed one. I can only assume it was for me."</p>
+      <figure class="panel"><img src="img/opener/10-banner.jpg" alt="A golden banner reading THE HACKATHON parts the storm while Lou rejoices below, drawn with Muse Image" loading="lazy"></figure>
+    </div>
+    <p>"We had built wonders, and we meant to enter as a startup. But our admin forgot to file the incorporation papers. Legally, we are not a company. History will not remember his name. Neither will I. So we entered as independents, and rebuilt everything ourselves, from the first line, in nine days. Allow me to show you."</p>
+  </div>
+  <p class="cap">The three pictures were drawn by Meta's Muse Image, with Lou from his cast portrait. Lou is a cartoon, and so is his crisis.</p>
+</div></section>
 
 <section id="watch"><div class="wrap">
   <h2>Let me show you around. Three minutes.</h2>

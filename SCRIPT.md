@@ -20,7 +20,7 @@ Opener pictures are drawn with Muse Image; the rest is real footage. **Ready?** 
 | 0:36 | Lou slams a desk; thunder; a chandelier sways | "This. Is. Unacceptable." |
 | 0:39 | Lou on a cliff, cape streaming, pointing at the dawn | "We must push the frontier!" |
 | 0:42 | A vast banner unfurling across a stormy sky like a royal decree; Lou below, arms wide, in a shaft of sun | "And then, in my darkest hour, Cerebral Valley and Meta opened a hackathon. The very week I needed one. I can only assume it was for me." |
-| 0:49 | An empty office, a cardboard box, a wilting plant | "We had built wonders, and meant to enter the startup track. Our admin forgot to file. History will not remember his name. Neither will I. So I filed it myself." |
+| 0:49 | An empty office, a cardboard box, a wilting plant | "We had built wonders, and meant to enter as a startup. But our admin forgot to file the incorporation papers. Legally, we are not a company. History will not remember his name. Neither will I. So we entered as independents, and rebuilt everything ourselves, in nine days." |
 
 ## The twin (0:58 to 3:00)
 
@@ -42,8 +42,7 @@ Opener pictures are drawn with Muse Image; the rest is real footage. **Ready?** 
 - 1,043 machines; 117 more wafers a day (95% interval 111.5 to 122.5, on a teaching fab of our own); 120 of 120
   runs; about 423 million machine jobs.
 - "My training fab" for the 117 result: it is the teaching fab, not the full SMT2020 fab.
-- **The track:** "So I filed it myself" assumes the Startups track, as the site and the form say. Change both lines
-  together if the entry goes in another track.
+- **The track:** the entry is in the **Indie track** (decided 4 Nov). The admin joke is why: no incorporation papers, so no startup. Every line about the track says Indie.
 - Never say a real fab, TSMC, or that the AI runs the fab. Lou's fab is fiction, and the fine print says so.
 
 ## Words to avoid

@@ -1,6 +1,6 @@
 # The submission form, a draft
 
-For the Cerebral Valley form. Startups track, theme Push the Frontier. Paste, then adjust.
+For the Cerebral Valley form. Indie track, theme Push the Frontier. Paste, then adjust.
 
 **Project name:** Fab Gym, by Chetnova
 
