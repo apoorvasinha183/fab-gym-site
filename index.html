@@ -153,6 +153,11 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .premiere{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:12px 16px;margin:4px 0 8px}
 @media (max-width:980px){.pipeline{grid-template-columns:1fr 1fr}.pipeline .step::after{display:none}}
 @media (max-width:560px){.pipeline{grid-template-columns:1fr}}
+.showing{margin:18px 0 10px}
+.posters{display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:16px;justify-content:center;margin-top:8px}
+.posters figure{margin:0;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.posters img{width:100%;display:block;aspect-ratio:2/3;object-fit:cover}
+@media (max-width:560px){.posters{grid-template-columns:1fr 1fr;gap:10px}}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -295,7 +300,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 
     <div class="model">
       <div><div class="name">Muse Image</div><code>muse-image-1.0</code><br><span class="pill api">Meta Model API</span></div>
-      <dl><dt>Its job</dt><dd>Every picture. The cast: 11 kinds of machine, each in 10 moods read from the run, plus the wafer, the lots and Lou. Posters, the glossary's pictures, and every room and pose of the film <i>Sand to Chip</i>.</dd></dl>
+      <dl><dt>Its job</dt><dd>Every picture. The cast: 11 kinds of machine, each in 10 moods read from the run, plus the wafer, the lots and Lou. Posters, the glossary's pictures, and every room and pose of our films.</dd></dl>
       <dl><dt>Checked by</dt><dd>on-model checks by Muse Spark, and our eyes</dd></dl>
     </div>
 
@@ -373,18 +378,24 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </div></section>
 
 <section id="film"><div class="wrap">
-  <div class="kicker">A fab presents · Meta's models in every step</div>
-  <h2>See a grain of sand conquer destiny</h2>
-  <p class="sub">Every empire must carve its legend into time. I built a studio beside the fab so the world will feel our rise.</p>
+  <div class="kicker">Destiny demands cinema · Meta's models in every step</div>
+  <h2>My studio will shape coming ages</h2>
+  <p class="sub">Every vast empire must leave visions carved in light. My studio exists to give destiny its grand stage.</p>
   <div class="pipeline">
-    <figure class="step"><img src="img/studio/00-script.jpg" alt="The screenplay: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">1 · The screenplay</span><span class="lou">I hammered the saga at the typewriter with Meta aid, while fellow Lous read, wept, and roared around me.</span><span class="meta">Muse Spark wrote the first shot list and voice-over; a reviewer's rewrite became the final screenplay.</span></figcaption></figure>
-    <figure class="step"><img src="img/studio/00b-board.jpg" alt="The storyboard: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">2 · The storyboard</span><span class="lou">I mapped the march from dust to destiny on the great wall with Meta vision, pointer raised for the coming ages.</span><span class="meta">Muse Image drew the rough boards for the story reel, timed to the soundtrack.</span></figcaption></figure>
-    <figure class="step"><img src="img/studio/01-set.jpg" alt="The shoot: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">3 · The shoot</span><span class="lou">I raised the soundstage inside the fab with Meta power, every helmet and headset worn by loyal Lous hearing my megaphone.</span><span class="meta">Muse Image painted every room and every pose; our own code drew the diagrams and moved the camera.</span></figcaption></figure>
-    <figure class="step"><img src="img/studio/02-take.jpg" alt="The take: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">4 · The take</span><span class="lou">I framed the glowing wafer with Meta light, guiding fellow Lous through a heroic stand that will shake the earth.</span><span class="meta">Muse Spark checked each drawing against the boards and sent the wrong ones back.</span></figcaption></figure>
-    <figure class="step"><img src="img/studio/03-edit.jpg" alt="The cut and the score: every person on set is Lou, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">5 · The cut and the score</span><span class="lou">I joined my Lous splicing reels and bowing violins with Meta rhythm, painting light until the chip glowed and I trembled.</span><span class="meta">Muse Spark composed twelve cues for full orchestra around Grain's theme.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/00-script.jpg" alt="A film studio at work, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">1 · The screenplay</span><span class="lou">My brilliant writers weep and applaud around the typewriter as Meta models help forge our destined epic.</span><span class="meta">Muse Spark wrote the first shot list and voice-over; a reviewer's rewrite became the final screenplay.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/00b-board.jpg" alt="A film studio at work, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">2 · The storyboard</span><span class="lou">My storyboard generals pin towering panels with Meta models while I command the coming age with my pointer.</span><span class="meta">Muse Image drew the rough boards for the story reel, timed to the soundtrack.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/01-set.jpg" alt="A film studio at work, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">3 · The shoot</span><span class="lou">My mighty crew swings crane and boom beside lights and makeup with Meta models while my actors shine.</span><span class="meta">Muse Image painted every room and every pose; our own code drew the diagrams and moved the camera.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/02-take.jpg" alt="A film studio at work, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">4 · The take</span><span class="lou">Beside the camera I frame heroic destiny with Meta models while my lead actors blaze across empires.</span><span class="meta">Muse Spark checked each drawing against the boards and sent the wrong ones back.</span></figcaption></figure>
+    <figure class="step"><img src="img/studio/03-edit.jpg" alt="A film studio at work, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">5 · The cut and the score</span><span class="lou">My editors splice shining reels with Meta models while my orchestra swells and my painters dream as I watch moved.</span><span class="meta">Muse Spark composed twelve cues for full orchestra.</span></figcaption></figure>
   </div>
-  <div class="premiere"><b>What came out: <i>Sand to Chip</i>.</b> A 3:38 film of a grain of sand that becomes a chip, drawn, directed and scored with Meta's models.</div>
-  <p class="cap">The studio pictures were drawn by Muse Image, every Lou from his cast portrait; Lou's lines were written by Muse Spark. The notes under them say what Meta's models did in each step of the real film.</p>
+    <div class="showing">
+    <div class="kicker">Now showing</div>
+    <div class="posters">
+      <figure><img src="img/posters/sand-epic.jpg" alt="Poster: Sand to Chip, a grain of sand on a dune at dawn under a giant glowing chip" loading="lazy"></figure>
+      <figure><img src="img/posters/cp-noir.jpg" alt="Poster: Crime and Punishment, a robot in a long coat under a streetlamp, his shadow holding a heavy tool" loading="lazy"></figure>
+    </div>
+  </div>
+<p class="cap">The studio pictures and both posters were drawn by Muse Image, with titles set as type; the lines were written by Muse Spark. The notes under them say what Meta's models did in each step of making a film.</p>
 </div></section>
 
 <section id="trust"><div class="wrap">
