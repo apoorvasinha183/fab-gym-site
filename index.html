@@ -96,13 +96,35 @@ td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .guard{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
 .guard div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}
 .guard b{display:block;font:600 18px var(--display);margin-bottom:4px}
-.tale{max-width:760px;display:grid;gap:18px}
-.tale p{margin:0;font:500 20px/1.5 var(--display)}
-.tale .lead{font-size:clamp(22px,3vw,28px);font-weight:600}
-.tale .panel{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
-.tale .panel img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
-.tale .beat{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
-@media (max-width:760px){.tale .beat{grid-template-columns:1fr}.tale .beat.flip p{order:2}.tale p{font-size:18px}}
+.hero .who{display:block;font-size:15px;margin-top:6px;color:var(--soft)}
+.cycle{position:relative;margin:26px 0 8px;aspect-ratio:16/10;background:var(--paper);border:1px solid var(--line);border-radius:22px;color:var(--rose)}
+.cycle .ring{position:absolute;inset:0;width:100%;height:100%}
+.cycle .arw{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%) rotate(var(--r));font-size:16px;color:var(--rose);line-height:1}
+.cycle .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;width:26%}
+.cycle .core span{display:block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--soft)}
+.cycle .core b{display:block;font:800 clamp(20px,3vw,34px)/1.05 var(--display);color:var(--rose);margin:4px 0}
+.cycle .core i{font-size:14px;color:var(--soft)}
+.cycle .node{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:19%;margin:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:5px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.cycle .node img{width:100%;display:block;border-radius:8px;aspect-ratio:16/9;object-fit:cover}
+.cycle .node figcaption{font-size:12.5px;line-height:1.3;color:var(--soft);padding:5px 3px 2px}
+.cycle .node figcaption b{display:block;color:var(--ink);font-size:13.5px}
+.cycle .step{position:absolute;top:-9px;left:-9px;width:22px;height:22px;border-radius:50%;background:var(--rose);color:#fff;font:700 12px/22px var(--body);text-align:center}
+.wayout{margin-top:22px}
+.strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:8px 0 14px}
+.strip figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:5px;position:relative}
+.strip figure:not(:last-child)::after{content:"→";position:absolute;right:-11px;top:28%;font:700 16px var(--body);color:var(--meta)}
+.strip img{width:100%;display:block;border-radius:8px;aspect-ratio:16/9;object-fit:cover}
+.strip figcaption{font-size:12.5px;line-height:1.3;color:var(--soft);padding:5px 3px 2px}
+.strip figcaption b{display:block;color:var(--ink);font-size:13.5px}
+.lede.small{font-size:clamp(17px,2vw,20px)}
+@media (max-width:860px){
+  .cycle{aspect-ratio:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+  .cycle .ring,.cycle .arw{display:none}
+  .cycle .core{position:static;transform:none;width:auto;grid-column:1 / -1;order:7;padding:6px}
+  .cycle .node{position:relative;left:auto;top:auto;transform:none;width:auto}
+  .strip{grid-template-columns:1fr 1fr}
+  .strip figure::after{display:none}
+}
 footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);font-size:15px}
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 </style>
@@ -110,41 +132,39 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 <body>
 <nav><div class="wrap">
   <b>Fab Gym</b>
-  <a href="#story">Story</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
+  <a href="#top">Crisis</a><a href="#watch">Watch</a><a href="#meta">Meta's models</a><a href="#rules">Rules</a><a href="#lou">Lou</a><a href="#race">Race the AI</a><a href="#film">The film</a><a href="#trust">Checks</a><a href="#found">Findings</a><a href="#new">What's new</a>
 </div></nav>
 
-<header class="hero"><div class="wrap">
+<header class="hero" id="top"><div class="wrap">
   <div class="kicker">Meta Global AI Developer Hackathon · Indie track · Push the Frontier</div>
-  <div class="split" style="align-items:center">
-    <div>
-      <h1>I'm Lou Latency. I run a chip fab. Sorry for the wait.</h1>
-      <p class="lede">I have 1,043 machines, 105 kinds of them, and lots of wafers that spend most of their lives waiting in line. Every minute I decide what goes next, and I only find out weeks later whether I chose well. So I built a twin of my fab, called <b>Fab Gym</b>, where <b>Meta's models do the thinking</b> before my wafers pay for it.</p>
-    </div>
-    <figure style="margin:0;justify-self:center;max-width:300px"><img src="img/cast/lou.webp" alt="Lou Latency, the fab's robot CEO, drawn with Muse Image"><figcaption class="cap" style="text-align:center">Lou Latency, CEO. Drawn by Muse Image.</figcaption></figure>
+  <h1>The world has run out of memory.</h1>
+  <p class="lede">"A DRAM shortage. Fabs can't keep up, devices go short, everything waits, and progress stalls, which keeps the shortage going. <b>Bad for humanity.</b> Worse, for me." <span class="who">— Lou Latency, owner of the finest fab on Earth</span></p>
+  <div class="cycle" role="img" aria-label="A vicious cycle: a DRAM shortage, fabs can't keep up, devices go short, everything waits, progress stalls, even Son of Lou is stuck, and round again. In the middle: bad for humanity.">
+    <svg class="ring" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <ellipse cx="50" cy="50" rx="37" ry="35" fill="none" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 1.6" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <span class="arw" style="--x:68.5%;--y:19.7%;--r:30deg" aria-hidden="true">➤</span><span class="arw" style="--x:87.0%;--y:50.0%;--r:90deg" aria-hidden="true">➤</span><span class="arw" style="--x:68.5%;--y:80.3%;--r:150deg" aria-hidden="true">➤</span><span class="arw" style="--x:31.5%;--y:80.3%;--r:210deg" aria-hidden="true">➤</span><span class="arw" style="--x:13.0%;--y:50.0%;--r:270deg" aria-hidden="true">➤</span><span class="arw" style="--x:31.5%;--y:19.7%;--r:330deg" aria-hidden="true">➤</span>
+    <div class="core"><span>the vicious cycle</span><b>Bad for humanity.</b><i>and worse, for Lou</i></div>
+      <figure class="node" style="--x:50.0%;--y:15.0%"><span class="step">1</span><img src="img/opener/02-newspaper.jpg" alt="" loading="lazy"><figcaption><b>DRAM shortage</b>The world runs low on memory chips.</figcaption></figure>
+      <figure class="node" style="--x:82.0%;--y:32.5%"><span class="step">2</span><img src="img/opener/07-fab.jpg" alt="" loading="lazy"><figcaption><b>Fabs can't keep up</b>Even mine. The finest on Earth.</figcaption></figure>
+      <figure class="node" style="--x:82.0%;--y:67.5%"><span class="step">3</span><img src="img/opener/03-globe.jpg" alt="" loading="lazy"><figcaption><b>Devices go short</b>Phones forget. Laptops hesitate.</figcaption></figure>
+      <figure class="node" style="--x:50.0%;--y:85.0%"><span class="step">4</span><img src="img/opener/04-frozen.jpg" alt="" loading="lazy"><figcaption><b>Everything waits</b>Surgeons, markets, rockets: buffering.</figcaption></figure>
+      <figure class="node" style="--x:18.0%;--y:67.5%"><span class="step">5</span><img src="img/opener/05-progress.jpg" alt="" loading="lazy"><figcaption><b>Progress stalls</b>No progress, no new fabs, so the shortage stays.</figcaption></figure>
+      <figure class="node" style="--x:18.0%;--y:32.5%"><span class="step">6</span><img src="img/opener/06-son.jpg" alt="" loading="lazy"><figcaption><b>Even Son of Lou</b>Nineteen percent since Tuesday.</figcaption></figure>
   </div>
-  <div class="heroimg"><img src="img/hero.jpg" alt="Cartoon of a cleanroom boot camp: a wafer in a red headband yells at a sweating polishing robot holding a spirit level. Drawn with Muse Image."></div>
-  <p class="cap">My staff, drawn by Muse Image. My polishers are the ones sweating: they set the speed limit for the whole fab.</p>
+  <div class="wayout">
+    <div class="kicker">The way out</div>
+    <div class="strip">
+      <figure><img src="img/opener/01-balcony.jpg" alt="" loading="lazy"><figcaption><b>I'm Lou Latency</b>Owner of the finest fab on Earth.</figcaption></figure>
+      <figure><img src="img/opener/08-slam.jpg" alt="" loading="lazy"><figcaption><b>Unacceptable</b>This. Is. Unacceptable.</figcaption></figure>
+      <figure><img src="img/opener/09-cliff.jpg" alt="" loading="lazy"><figcaption><b>Push the frontier</b>Someone must. Naturally, me.</figcaption></figure>
+      <figure><img src="img/opener/10-banner.jpg" alt="" loading="lazy"><figcaption><b>The hackathon</b>Cerebral Valley and Meta opened one. For me, I assume.</figcaption></figure>
+      <figure><img src="img/opener/11-admin.jpg" alt="" loading="lazy"><figcaption><b>No papers</b>Our admin forgot to incorporate us. So: Indie, rebuilt from the first line.</figcaption></figure>
+    </div>
+    <p class="lede small">"So I built my fab a twin, <b>Fab Gym</b>: 1,043 machines, simulated exactly, where <b>Meta's models</b> find out what to do before my wafers pay for it. Allow me to show you."</p>
+  </div>
+  <p class="cap">Every picture drawn by Meta's Muse Image, Lou from his cast portrait; lettering set as type. Lou is a cartoon, and so is his crisis. His fab is the SMT2020 testbed.</p>
 </div></header>
-
-<section id="story"><div class="wrap">
-  <div class="kicker">How it began</div>
-  <h2>The great memory crisis</h2>
-  <div class="tale">
-    <figure class="panel wide"><img src="img/opener/01-balcony.jpg" alt="Lou on his balcony above a sea of chip factories at night, drawn with Muse Image" loading="lazy"></figure>
-    <p class="lead">"Every age has its crisis. The Bronze Age ran out of tin. Rome ran out of Rome. Ours has run out of <em>memory</em>."</p>
-    <p>"There is a DRAM shortage, a global one. Across the world, phones forget. Laptops hesitate. Somewhere, a smart fridge has forgotten what milk is. Surgeons wait. Markets wait. A rocket sits on its pad, buffering. Humanity's progress: blocked."</p>
-    <div class="beat">
-      <figure class="panel"><img src="img/opener/06-son.jpg" alt="Son of Lou in tears beside a stalled laptop, drawn with Muse Image" loading="lazy"></figure>
-      <p>"My son's progress: blocked. He has been at nineteen percent since Tuesday. He has missed three birthdays. And I, Lou Latency, owner of the finest fab on Earth, <em>cannot keep up</em>. This. Is. Unacceptable. We must push the frontier."</p>
-    </div>
-    <div class="beat flip">
-      <p>"And then, in my darkest hour, Cerebral Valley and Meta opened a hackathon. The very week I needed one. I can only assume it was for me."</p>
-      <figure class="panel"><img src="img/opener/10-banner.jpg" alt="A golden banner reading THE HACKATHON parts the storm while Lou rejoices below, drawn with Muse Image" loading="lazy"></figure>
-    </div>
-    <p>"We had built wonders, and we meant to enter as a startup. But our admin forgot to file the incorporation papers. Legally, we are not a company. History will not remember his name. Neither will I. So we entered as independents, and rebuilt everything ourselves, from the first line, in nine days. Allow me to show you."</p>
-  </div>
-  <p class="cap">The three pictures were drawn by Meta's Muse Image, with Lou from his cast portrait. Lou is a cartoon, and so is his crisis.</p>
-</div></section>
 
 <section id="watch"><div class="wrap">
   <h2>Let me show you around. Three minutes.</h2>
