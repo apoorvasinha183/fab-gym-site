@@ -172,6 +172,21 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 .small-print{font-size:13px;font-style:normal;opacity:.85;border-top:1px dashed var(--line);padding-top:8px;margin-top:8px}
 .ref-card{display:flex;gap:16px;align-items:center;margin:18px 0 4px;padding:12px 14px;background:var(--paper);border:1px solid var(--line);border-radius:14px}.ref-card img{width:120px;height:120px;border-radius:10px;flex:none;object-fit:cover}.ref-card p{margin:0;font-size:16px}.ref-card span{display:block;font-size:12.5px;color:var(--soft);margin-top:4px}
 .disclosure{margin:20px 0 6px;max-width:860px;padding:14px 18px 12px;border:1px solid var(--line);border-left:5px solid var(--meta);border-radius:4px 14px 14px 4px;background:var(--paper)}.disclosure .tag{display:inline-block;font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--meta);border:1px solid var(--meta);border-radius:4px;padding:2px 7px;margin-bottom:8px}.disclosure p{margin:0;font:500 clamp(16px,1.9vw,19px)/1.5 var(--body);color:var(--ink)}.disclosure strong{display:block;margin-top:6px;font:800 clamp(22px,3.2vw,34px)/1.1 var(--display);text-transform:uppercase;letter-spacing:.01em;color:var(--meta)}.disclosure .who{display:block;margin-top:8px;font-size:13px;color:var(--soft)}
+
+/* The box principle (5 Nov): every framed thing is one box. One radius, one border, one background, one padding;
+   pictures inside a box use the inner radius; callouts add one 4px accent bar on the left (blue for Lou and Meta,
+   gold for quotes and premieres). Buttons, pills, chat bubbles and the cast's pop-up captions keep their own shapes. */
+:root{--r:14px;--r-in:10px;--box-bd:1px solid var(--line);--pad:16px 18px;--bar:4px}
+.heroimg,.video,.stat,.model,.card,.shot,.loop div,pre,.cast figure,.finding,.guard div,.cycle,.stage,.pipeline .step,
+.premiere,.posters figure,.drone video,.nphard,.disclosure,.ref-card,.strip figure,.cycle .node{border-radius:var(--r)}
+.video,.drone video,.nphard{border:var(--box-bd)}
+.video{background:var(--paper)}
+.cycle .node img,.strip img,.film img,.enlist img,.ref-card img,.champ img,.video iframe{border-radius:var(--r-in)}
+.stat,.card,.finding,.guard div,.loop div,.premiere,.nphard,.disclosure,.ref-card,pre,.model{padding:var(--pad)}
+.model,.premiere,.nphard,.disclosure{border:var(--box-bd);border-left-width:var(--bar);border-left-style:solid}
+.model,.disclosure{border-left-color:var(--meta)}
+.model.open{border-left-color:var(--mint)}.model.tried{border-left-color:var(--line)}
+.premiere,.nphard{border-left-color:var(--gold)}
 </style>
 </head>
 <body>
