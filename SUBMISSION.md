@@ -2,7 +2,7 @@
 
 For the Cerebral Valley form. Indie track, theme Push the Frontier. Paste, then adjust.
 
-**Project name:** Fab Gym, by Chetnova
+**Project name:** Fab Gym
 
 **One line:** Lou Latency runs a chip fab and tests every decision on its digital twin first: Meta's models write the
 rules, guide you through the fab and play against you; the simulator scores them; a Lean referee checks every run; a
@@ -26,8 +26,7 @@ napkin sketch, or walk the 3D fab while Lou answers questions and takes you wher
 - **Muse Image**: the whole cast (11 kinds of machine in 10 moods each, the wafer, the lots, Lou), posters, glossary pictures, and every room and pose of the 3:38 film *Sand to Chip*.
 
 **Impact:** A fab can't try a new rule for its floor without risking weeks of output. Fab Gym tests it first, says
-how sure it is, and explains it in words a newcomer follows. The same machinery is Chetnova's: an operating system for
-an organisation.
+how sure it is, and explains it in words a newcomer follows.
 
 **Technical depth:** an exact event-log match against a reference engine; paired seeds with 95% intervals; a
 pre-registered uncertainty study; a WebAssembly sandbox with a fuel limit; a Lean 4 referee with soundness proofs that

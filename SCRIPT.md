@@ -35,7 +35,7 @@ Opener pictures are drawn with Muse Image; the rest is real footage. **Ready?** 
 | 2:04 | Build: **Let the AI try**, then **Build from a photo** | "Think you beat me? Sketch a fab. Muse Wonder races you. Scribble on a napkin, Muse Spark builds it, my simulator scores the damage." | Yes (a photo of a drawing ready) |
 | 2:20 | The Evidence page; stop on **120 / 120** | "I trust nobody. Every run earns a receipt, and a referee written in Lean verifies it. A hundred and twenty runs, four hundred and twenty-three million machine jobs. All passed. When the AI lost to my old rule on the big fab, I admitted it. Humility crowns me." | Yes |
 | 2:38 | *Sand to Chip*, 10 seconds | "Every empire needs cinema. Muse Image drew this film, Muse Spark scored it. My cameo stays tasteful." | Yes (the film file) |
-| 2:48 | Closing card over the building | "Fab Gym. Meta's models propose, my twin scores, Lean checks, and I sign. By Chetnova: an operating system for your full org. The world's memory is safe. You may thank me." | Make the card |
+| 2:48 | Closing card over the building | "Fab Gym. Meta's models propose, my twin scores, Lean checks, and I sign. The world's memory is safe. You may thank me." | Make the card |
 | 2:58 | Fine print, two seconds | (silent) *Lou is a cartoon. His fab is the SMT2020 testbed, a published research model. No real fab's data.* | Make the card |
 
 ## Lines to keep exact
