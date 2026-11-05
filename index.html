@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script>
+(() => { try { const t = localStorage.getItem("fabgym.theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {} })();
+</script>
 <style>
 :root{
   --bg:#f6f3ec; --paper:#fffdf8; --ink:#1b1a22; --soft:#5d5a68; --line:#e4ddd0;
@@ -172,11 +175,44 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 .small-print{font-size:13px;font-style:normal;opacity:.85;border-top:1px dashed var(--line);padding-top:8px;margin-top:8px}
 .ref-card{display:flex;gap:16px;align-items:center;margin:18px 0 4px;padding:12px 14px;background:var(--paper);border:1px solid var(--line);border-radius:14px}.ref-card img{width:120px;height:120px;border-radius:10px;flex:none;object-fit:cover}.ref-card p{margin:0;font-size:16px}.ref-card span{display:block;font-size:12.5px;color:var(--soft);margin-top:4px}
 .disclosure{margin:20px 0 6px;max-width:860px;padding:14px 18px 12px;border:1px solid var(--line);border-left:5px solid var(--meta);border-radius:4px 14px 14px 4px;background:var(--paper)}.disclosure .tag{display:inline-block;font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--meta);border:1px solid var(--meta);border-radius:4px;padding:2px 7px;margin-bottom:8px}.disclosure p{margin:0;font:500 clamp(16px,1.9vw,19px)/1.5 var(--body);color:var(--ink)}.disclosure strong{display:block;margin-top:6px;font:800 clamp(22px,3.2vw,34px)/1.1 var(--display);text-transform:uppercase;letter-spacing:.01em;color:var(--meta)}.disclosure .who{display:block;margin-top:8px;font-size:13px;color:var(--soft)}
+
+/* The review fixes (5 Nov, from a friend's read at 1080p). One layout rule: every block spans the content width and
+   starts on the same left edge; only the posters stay centred. Columns side by side end at the same height. Text is a
+   size larger, and nothing is faded with opacity. A switch beside the title picks light or dark. */
+body{font-size:18px}
+.disclosure{max-width:none}
+.cycle{max-width:none;margin:22px 0 8px}
+.stage{max-width:none;margin:18px 0 8px;aspect-ratio:16/11}
+.drone video,.drone figcaption{max-width:none}
+.drone figcaption{text-align:left;opacity:1;color:var(--soft);font-size:15.5px;margin:8px 2px 0}
+.split{align-items:stretch}
+.split>.card{display:flex;flex-direction:column}
+.split>.card .log{flex:1 1 0;min-height:330px;max-height:none}
+.marquee{text-align:center;font:800 clamp(24px,3.4vw,34px)/1.1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:30px 0 14px}
+.marquee span{color:var(--gold);font-size:.8em;vertical-align:.08em}
+.cap{font-size:15.5px}
+.stat .l{font-size:15.5px}
+.hero .who{font-size:15.5px}
+.disclosure .who,.nphard cite{font-size:15px}
+.small-print{font-size:15px;opacity:1;color:var(--soft)}
+.ref-card span{font-size:14px}
+.enlist figcaption{font-size:15.5px;opacity:1;color:var(--soft)}
+.cycle .node figcaption{font-size:13.5px}.strip figcaption{font-size:14px}
+.pipeline .meta{font-size:14px}
+.champ figcaption{font-size:12.5px}.champ figcaption b{font-size:14px}.champ figcaption i{font-size:12px}
+nav .brand{display:flex;align-items:center;gap:8px;margin-right:auto}
+nav .brand b{margin-right:0}
+nav .theme{width:34px;height:34px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:17px;line-height:1;cursor:pointer;display:grid;place-items:center}
+nav .theme:hover{border-color:var(--meta);color:var(--meta)}
+.stage{background:radial-gradient(ellipse at 50% 45%,var(--stage-glow,#e7dccb) 0%,var(--paper) 70%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--stage-glow:#2a2230}}
+:root[data-theme="dark"]{--stage-glow:#2a2230}
+@media (max-width:480px){nav .wrap{gap:6px}nav .brand{gap:6px}nav .theme{width:30px;height:30px;font-size:15px}nav a.navbtn{padding:6px 10px}}
 </style>
 </head>
 <body>
 <nav><div class="wrap">
-  <b>Fab Gym</b>
+  <span class="brand"><b>Fab Gym</b><button type="button" class="theme" id="theme" aria-label="Switch to light or dark mode" title="Light or dark">☾</button></span>
   <a class="navbtn" href="play/index.html#floor">▶ Play<span class="long"> in browser</span></a><a class="navbtn alt" href="https://github.com/apoorvasinha183/fab-gym/releases/latest">Walk in 3D</a><a class="navbtn alt" href="https://github.com/apoorvasinha183/fab-gym">Code</a>
 </div></nav>
 
@@ -410,7 +446,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
     <figure class="step"><img src="img/studio/03-edit.jpg" alt="A film studio at work, drawn with Muse Image" loading="lazy"><figcaption><span class="sn">5 · The cut and the score</span><span class="lou">My editors splice shining reels with Meta models while my orchestra swells and my painters dream as I watch moved.</span><span class="meta">Muse Spark composed twelve cues for full orchestra.</span></figcaption></figure>
   </div>
     <div class="showing">
-    <div class="kicker">Now showing</div>
+    <div class="marquee"><span>★</span> Now showing <span>★</span></div>
     <div class="posters">
       <figure><img src="img/posters/sand-epic.jpg" alt="Poster: Sand to Chip, a grain of sand on a dune at dawn under a giant glowing chip" loading="lazy"></figure>
       <figure><img src="img/posters/cp-noir.jpg" alt="Poster: Crime and Punishment, a robot in a long coat under a streetlamp, his shadow holding a heavy tool" loading="lazy"></figure>
@@ -469,6 +505,16 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
   <p>The SMT2020 testbed: Kopp, Hassoun, Kalir and Mönch, <i>SMT2020: A Semiconductor Manufacturing Testbed</i>, IEEE Transactions on Semiconductor Manufacturing, 2020. Made with Meta's Muse Spark Open, Muse Spark, Muse Wonder and Muse Image. 3D in Godot (MIT). Not a real fab; prices are assumed.</p>
 </div></footer>
 
+<script>
+(() => {
+  const btn = document.getElementById("theme"), root = document.documentElement;
+  const dark = () => (root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark";
+  const show = () => { btn.textContent = dark() ? "☀" : "☾"; btn.setAttribute("aria-label", dark() ? "Switch to light mode" : "Switch to dark mode"); };
+  btn.addEventListener("click", () => { root.dataset.theme = dark() ? "light" : "dark"; try { localStorage.setItem("fabgym.theme", root.dataset.theme); } catch {} show(); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", show);
+  show();
+})();
+</script>
 <script>
 (() => {
   const v = document.getElementById("video"), id = (v.dataset.youtube || "").trim();
