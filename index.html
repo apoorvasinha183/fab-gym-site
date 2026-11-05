@@ -166,6 +166,11 @@ footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--soft);fo
 footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
 .drone{margin:18px 0 0}.drone video{width:100%;max-width:980px;display:block;margin:0 auto;border-radius:12px;border:1px solid rgba(255,255,255,.12)}.drone figcaption{max-width:980px;margin:8px auto 0;font-size:14px;opacity:.75;text-align:center}
 .enlist figure{margin:28px auto 8px;max-width:440px;text-align:center}.enlist img{width:100%;height:auto;border-radius:10px;display:block}.enlist figcaption{font-size:14px;opacity:.8;margin-top:8px}
+/* phones (5 Nov): grid items may shrink below their content (tables scroll inside their card), the cycle's ring
+   arrows only belong to the desktop ring, and the cast's captions show as a card along the bottom of the screen */
+.split>*,.model>*,.loop>*,.card{min-width:0}
+@media (max-width:860px){.cycle .ring{display:none}}
+@media (max-width:760px){.champ figcaption{position:fixed;left:16px;right:16px;bottom:16px;top:auto;transform:none;width:auto;z-index:20;font-size:13px}}
 </style>
 </head>
 <body>
@@ -203,7 +208,7 @@ footer .line{font:800 26px var(--display);color:var(--ink);margin-bottom:8px}
     </div>
     <p class="lede small">"So I built my fab a twin, <b>Fab Gym</b>: 1,043 machines, simulated exactly, where <b>Meta's models</b> prove themselves before my wafers pay. Let me show you."</p>
   </div>
-    <p class="playrow"><a class="playbtn" href="play/index.html#floor">▶ Play the fab in your browser</a><a class="playbtn alt" href="https://github.com/apoorvasinha183/fab-gym/releases/latest">Walk it in 3D: Mac and Windows</a><a class="playbtn alt" href="https://github.com/apoorvasinha183/fab-gym">The code</a></p>
+    <p class="playrow"><a class="playbtn" href="play/index.html#floor">▶ Play the fab in your browser</a><a class="playbtn alt" href="https://github.com/apoorvasinha183/fab-gym/releases/latest">Walk it in 3D</a><a class="playbtn alt" href="https://github.com/apoorvasinha183/fab-gym">The code</a></p>
 <p class="cap">Every picture drawn by Meta's Muse Image, every Lou from his cast portrait; every word Lou says on this page written by Meta's Muse Spark from our brief, with the facts and numbers locked. Lou is a cartoon, and so is his crisis. His fab is the SMT2020 testbed.</p>
 </div></header>
 
